@@ -1,0 +1,82 @@
+/* 1. Use a more-intuitive box-sizing model */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* 2. Remove default margin */
+* {
+  margin: 0;
+}
+
+body {
+  /* 3. Add accessible line-height */
+  line-height: 1.5;
+  /* 4. Improve text rendering */
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 5. Improve media defaults */
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* 6. Inherit fonts for form controls */
+input, button, textarea, select {
+  font: inherit;
+}
+
+/* 7. Avoid text overflows */
+p, h1, h2, h3, h4, h5, h6 {
+  overflow-wrap: break-word;
+}
+
+/* 8. Improve line wrapping */
+p {
+  text-wrap: pretty;
+}
+h1, h2, h3, h4, h5, h6 {
+  text-wrap: balance;
+}
+
+/*
+  9. Create a root stacking context
+*/
+#root, #__next {
+  isolation: isolate;
+}
+
+:root {
+  --color-white: rgb(255, 255, 255);
+  --color-black: rgb(0, 0, 0);
+  --color-gray-light: rgb(224, 224, 224);
+  --color-gray-medium: rgb(192,192,192);
+  --color-gray-dark: 	rgb(128,128,128);
+  --color-shadow: rgba(20, 20, 40, 0.3);
+
+  --shadow-card: var(--color-shadow) 0px 4px 12px;
+
+  --padding: 16px;
+  --padding-half: calc(var(--padding) / 2);
+  --padding-double: calc(var(--padding) * 2);
+
+  --border-radius: 16px;
+}
+
+html {
+  scrollbar-gutter: stable;
+}
+
+body {
+  font-family: sans-serif;
+}
+
+button {
+  background-color: transparent;
+  border: none;
+  margin: 0;
+  padding: 0;
+  text-align: inherit;
+  border-radius: 0;
+  appearance: none;
+}
