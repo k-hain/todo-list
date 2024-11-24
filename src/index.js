@@ -1,5 +1,6 @@
 import PubSub from 'pubsub-js';
 import './style.css';
+import { ListController } from './list';
 
 class DisplayController {
   static #listsEl = document.querySelector('#lists');
@@ -10,10 +11,10 @@ class DisplayController {
     }
   }
 
-  static #printListsNav(listNames) {
-    listNames.forEach((listName) => {
+  static #printListsNav(lists) {
+    lists.forEach((list) => {
       const listNameEl = document.createElement('div');
-      listNameEl.textContent = listName;
+      listNameEl.textContent = list.name;
       DisplayController.#listsEl.appendChild(listNameEl);
     });
   }
@@ -23,8 +24,9 @@ class DisplayController {
     DisplayController.#printListsNav(lists);
   }
 
-  static #listsUpdateDisplayToken = 
-    PubSub.subscribe('LISTS_UPDATE_DISPLAY', DisplayController.#updateListsNav);
+  static #listsUpdateToken = 
+    PubSub.subscribe('LISTS_UPDATE', DisplayController.#updateListsNav);
 }
 
-PubSub.publish('LISTS_UPDATE_DISPLAY', ['List 1', 'List 2', 'List 3']);
+PubSub.publish('LIST_ADD_NEW', 'Personal');
+PubSub.publish('LIST_ADD_NEW', 'Work');
