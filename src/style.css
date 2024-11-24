@@ -56,9 +56,11 @@ h1, h2, h3, h4, h5, h6 {
 
   --shadow-card: var(--color-shadow) 0px 4px 12px;
 
-  --padding: 16px;
-  --padding-half: calc(var(--padding) / 2);
-  --padding-double: calc(var(--padding) * 2);
+
+  --padding-tiny: 4px;
+  --padding-small: 8px;
+  --padding-base: 16px;
+  --padding-large: 24px;
 
   --border-radius: 16px;
 }
@@ -79,4 +81,14 @@ button {
   text-align: inherit;
   border-radius: 0;
   appearance: none;
+}
+
+#sidebar {
+  width: 240px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: var(--padding-base);
+  gap: var(--padding-tiny);
+  background-color: var(--color-gray-medium);
 }
