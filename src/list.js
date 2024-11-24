@@ -19,9 +19,18 @@ export class ListController {
 
   static #addNewList(msg, name) {
     ListController.#lists.push(new List(name));
-    PubSub.publish('LISTS_UPDATE', ListController.#lists);
+    PubSub.publish('LISTS_DRAW', ListController.#lists);
+    PubSub.publish('LISTS_SAVE', ListController.#lists);
   }
 
   static #listAddNewToken = 
     PubSub.subscribe('LIST_ADD_NEW', ListController.#addNewList);
+
+  static #loadLists(msg, loadedLists) {
+    ListController.#lists = loadedLists;
+    PubSub.publish('LISTS_DRAW', ListController.#lists);
+  }
+
+  static #listsLoadToken =
+    PubSub.subscribe('LISTS_LOAD', ListController.#loadLists);
 }

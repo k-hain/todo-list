@@ -1,6 +1,7 @@
 import PubSub from 'pubsub-js';
 import './style.css';
 import { ListController } from './list';
+import { StorageController } from './storage';
 
 class DisplayController {
   static #listsEl = document.querySelector('#lists');
@@ -24,9 +25,8 @@ class DisplayController {
     DisplayController.#printListsNav(lists);
   }
 
-  static #listsUpdateToken = 
-    PubSub.subscribe('LISTS_UPDATE', DisplayController.#updateListsNav);
+  static #listsDrawToken = 
+    PubSub.subscribe('LISTS_DRAW', DisplayController.#updateListsNav);
 }
 
-PubSub.publish('LIST_ADD_NEW', 'Personal');
-PubSub.publish('LIST_ADD_NEW', 'Work');
+PubSub.publish('LISTS_INITIALIZE');
