@@ -15,6 +15,6 @@ export class StorageController {
     }
   }
 
-  static #listsInitializeToken = 
-    PubSub.subscribe('LISTS_INITIALIZE', StorageController.#getStoredLists);
+  static #pageInitializeToken = 
+    PubSub.subscribe('PAGE_INITIALIZE', StorageController.#getStoredLists);
 }

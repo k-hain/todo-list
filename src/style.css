@@ -92,3 +92,8 @@ button {
   gap: var(--padding-tiny);
   background-color: var(--color-gray-medium);
 }
+
+.lists-header {
+  display: flex;
+  justify-content: space-between;
+}

@@ -4,7 +4,21 @@ import { ListController } from './list';
 import { StorageController } from './storage';
 
 class DisplayController {
-  static #listsEl = document.querySelector('#lists');
+  static #listsEl = document.getElementById('lists');
+  static #addListBtn = document.getElementById('add-list-btn');
+
+  static #initializeNavButtons(msg) {
+    DisplayController.#addListBtn.addEventListener('click', () => {
+      let newName;
+      while (!newName) {
+        newName = prompt('Add a list name');
+      }
+      PubSub.publish('LIST_ADD_NEW', newName);
+    });
+  }
+
+  static #pageInitializeToken = 
+    PubSub.subscribe('PAGE_INITIALIZE', DisplayController.#initializeNavButtons);
 
   static #clearContents(domElement) {
     while(domElement.firstChild){
@@ -29,4 +43,4 @@ class DisplayController {
     PubSub.subscribe('LISTS_DRAW', DisplayController.#updateListsNav);
 }
 
-PubSub.publish('LISTS_INITIALIZE');
+PubSub.publish('PAGE_INITIALIZE');
