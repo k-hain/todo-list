@@ -1,38 +1,38 @@
-class Task {
-  constructor (name) {
-    this.name = name;
-    this.description = '';
-    this.dueDate = new Date();
-    this.priority = 0;
+export const listController = (function () {
+  class Task {
+    constructor (name) {
+      this.name = name;
+      this.description = '';
+      this.dueDate = new Date();
+      this.priority = 0;
+    }
   }
-}
 
-class List {
-  constructor (name) {
-    this.name = name;
-    this.tasks = [];
+  class List {
+    constructor (name) {
+      this.name = name;
+      this.tasks = [];
+    }
   }
-}
 
-export class ListController {
-  static #lists = [];
+  let lists = [];
 
-  static #addNewList(msg, name) {
+  const addNewList = (msg, name) => {
     const newList = new List(name);
     newList.tasks.push(new Task('My first task'));
-    ListController.#lists.push(newList);
-    PubSub.publish('LISTS_DRAW', ListController.#lists);
-    PubSub.publish('LISTS_SAVE', ListController.#lists);
-  }
+    lists.push(newList);
+    PubSub.publish('LISTS_DRAW', lists);
+    PubSub.publish('LISTS_SAVE', lists);
+  };
 
-  static #listAddNewToken = 
-    PubSub.subscribe('LIST_ADD_NEW', ListController.#addNewList);
+  const listAddNewToken = 
+    PubSub.subscribe('LIST_ADD_NEW', addNewList);
 
-  static #loadLists(msg, loadedLists) {
-    ListController.#lists = loadedLists;
-    PubSub.publish('LISTS_DRAW', ListController.#lists);
-  }
+  const loadLists = (msg, loadedLists) => {
+    lists = loadedLists;
+    PubSub.publish('LISTS_DRAW', lists);
+  };
 
-  static #listsLoadToken =
-    PubSub.subscribe('LISTS_LOAD', ListController.#loadLists);
-}
+  const listsLoadToken =
+    PubSub.subscribe('LISTS_LOAD', loadLists);
+})();

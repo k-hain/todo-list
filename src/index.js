@@ -1,15 +1,15 @@
 import PubSub from 'pubsub-js';
 import './style.css';
-import { ListController } from './list';
-import { StorageController } from './storage';
+import { listController } from './list';
+import { storageController } from './storage';
 
-class DisplayController {
-  static #contentEl = document.getElementById('content');
-  static #listsEl = document.getElementById('lists');
-  static #addListBtn = document.getElementById('add-list-btn');
+const displayController = (function () {
+  const contentEl = document.getElementById('content');
+  const listsEl = document.getElementById('lists');
+  const addListBtn = document.getElementById('add-list-btn');
 
-  static #initializeNavButtons(msg) {
-    DisplayController.#addListBtn.addEventListener('click', () => {
+  const initializeNavButtons = (msg) => {
+    addListBtn.addEventListener('click', () => {
       let newName;
       let keepGoing = true;
       while (keepGoing) {
@@ -22,38 +22,38 @@ class DisplayController {
         }
       }
     });
-  }
+  };
 
-  static #pageInitializeToken = 
-    PubSub.subscribe('PAGE_INITIALIZE', DisplayController.#initializeNavButtons);
+  const pageInitializeToken = 
+    PubSub.subscribe('PAGE_INITIALIZE', initializeNavButtons);
 
-  static #clearContents(domElement) {
+  const clearContents = (domElement) => {
     while(domElement.firstChild){
       domElement.removeChild(domElement.firstChild);
     }
-  }
+  };
 
-  static #printListsNav(lists) {
+  const printListsNav = (lists) => {
     lists.forEach((list) => {
       const listNameEl = document.createElement('button');
       listNameEl.textContent = list.name;
       listNameEl.addEventListener('click', () => {
-        DisplayController.#clearContents(DisplayController.#contentEl);
-        DisplayController.#showListPage(list);
+        clearContents(contentEl);
+        showListPage(list);
       });
-      DisplayController.#listsEl.appendChild(listNameEl);
+      listsEl.appendChild(listNameEl);
     });
-  }
+  };
 
-  static #updateListsNav(msg, lists) {
-    DisplayController.#clearContents(DisplayController.#listsEl);
-    DisplayController.#printListsNav(lists);
-  }
+  const updateListsNav = (msg, lists) => {
+    clearContents(listsEl);
+    printListsNav(lists);
+  };
 
-  static #listsDrawToken = 
-    PubSub.subscribe('LISTS_DRAW', DisplayController.#updateListsNav);
+  const listsDrawToken = 
+    PubSub.subscribe('LISTS_DRAW', updateListsNav);
 
-  static #showListPage(list) {
+  const showListPage = (list) => {
     const listNameEl = document.createElement('h1');
     listNameEl.textContent = list.name;
     content.appendChild(listNameEl);
@@ -62,7 +62,7 @@ class DisplayController {
       taskEl.textContent = task.name;
       content.appendChild(taskEl);
     });
-  }
-}
+  };
+})();
 
 PubSub.publish('PAGE_INITIALIZE');

@@ -1,20 +1,20 @@
-export class StorageController {
-
-  static #saveLists(msg, lists) {
+export const storageController = (function () {
+  const saveLists = (msg, lists) => {
     localStorage.lists = JSON.stringify(lists);
-  }
+  };
 
-  static #listsSaveToken = 
-    PubSub.subscribe('LISTS_SAVE', StorageController.#saveLists);
+  const listsSaveToken = 
+    PubSub.subscribe('LISTS_SAVE', saveLists);
 
-  static #getStoredLists(msg) {
-    if (!localStorage.getItem('lists')) {
+  const getStoredLists = (msg) => {
+    const localLists = localStorage.getItem('lists');
+    if (!localLists) {
       PubSub.publish('LIST_ADD_NEW', 'Personal');
     } else {
-      PubSub.publish('LISTS_LOAD', JSON.parse(localStorage.getItem('lists')));
+      PubSub.publish('LISTS_LOAD', JSON.parse(localLists));
     }
-  }
+  };
 
-  static #pageInitializeToken = 
-    PubSub.subscribe('PAGE_INITIALIZE', StorageController.#getStoredLists);
-}
+  const pageInitializeToken = 
+    PubSub.subscribe('PAGE_INITIALIZE', getStoredLists);
+})();
