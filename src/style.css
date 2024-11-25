@@ -83,6 +83,11 @@ button {
   appearance: none;
 }
 
+#content {
+  width: 1280px;
+  margin: 0 auto 0;
+}
+
 #sidebar {
   width: 240px;
   height: 100vh;
@@ -91,6 +96,13 @@ button {
   padding: var(--padding-base);
   gap: var(--padding-tiny);
   background-color: var(--color-gray-medium);
+  position: absolute;
+}
+
+#lists {
+  display: flex;
+  flex-direction: column;
+  gap: var(--padding-tiny);
 }
 
 .lists-header {

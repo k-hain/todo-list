@@ -4,16 +4,23 @@ import { ListController } from './list';
 import { StorageController } from './storage';
 
 class DisplayController {
+  static #contentEl = document.getElementById('content');
   static #listsEl = document.getElementById('lists');
   static #addListBtn = document.getElementById('add-list-btn');
 
   static #initializeNavButtons(msg) {
     DisplayController.#addListBtn.addEventListener('click', () => {
       let newName;
-      while (!newName) {
+      let keepGoing = true;
+      while (keepGoing) {
         newName = prompt('Add a list name');
+        if (newName) {
+          PubSub.publish('LIST_ADD_NEW', newName);
+          keepGoing = false;
+        } else if (newName === null) {
+          keepGoing = false;
+        }
       }
-      PubSub.publish('LIST_ADD_NEW', newName);
     });
   }
 
@@ -28,8 +35,12 @@ class DisplayController {
 
   static #printListsNav(lists) {
     lists.forEach((list) => {
-      const listNameEl = document.createElement('div');
+      const listNameEl = document.createElement('button');
       listNameEl.textContent = list.name;
+      listNameEl.addEventListener('click', () => {
+        DisplayController.#clearContents(DisplayController.#contentEl);
+        DisplayController.#showListPage(list);
+      });
       DisplayController.#listsEl.appendChild(listNameEl);
     });
   }
@@ -41,6 +52,17 @@ class DisplayController {
 
   static #listsDrawToken = 
     PubSub.subscribe('LISTS_DRAW', DisplayController.#updateListsNav);
+
+  static #showListPage(list) {
+    const listNameEl = document.createElement('h1');
+    listNameEl.textContent = list.name;
+    content.appendChild(listNameEl);
+    list.tasks.forEach((task) => {
+      const taskEl = document.createElement('div');
+      taskEl.textContent = task.name;
+      content.appendChild(taskEl);
+    });
+  }
 }
 
 PubSub.publish('PAGE_INITIALIZE');

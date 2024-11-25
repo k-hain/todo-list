@@ -18,7 +18,9 @@ export class ListController {
   static #lists = [];
 
   static #addNewList(msg, name) {
-    ListController.#lists.push(new List(name));
+    const newList = new List(name);
+    newList.tasks.push(new Task('My first task'));
+    ListController.#lists.push(newList);
     PubSub.publish('LISTS_DRAW', ListController.#lists);
     PubSub.publish('LISTS_SAVE', ListController.#lists);
   }
