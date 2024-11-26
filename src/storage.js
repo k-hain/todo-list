@@ -2,19 +2,12 @@ export const storageController = (function () {
   const saveLists = (msg, lists) => {
     localStorage.lists = JSON.stringify(lists);
   };
-
   const listsSaveToken = 
-    PubSub.subscribe('LISTS_SAVE', saveLists);
+    PubSub.subscribe('SAVE_DATA', saveLists);
 
-  const getStoredLists = (msg) => {
-    const localLists = localStorage.getItem('lists');
-    if (!localLists) {
-      PubSub.publish('LIST_ADD_NEW', 'Personal');
-    } else {
-      PubSub.publish('LISTS_LOAD', JSON.parse(localLists));
-    }
+  const loadLists = (msg) => {
+    PubSub.publish('REVIVE_DATA', JSON.parse(localStorage.getItem('lists')));
   };
-
   const pageInitializeToken = 
-    PubSub.subscribe('PAGE_INITIALIZE', getStoredLists);
+    PubSub.subscribe('LOAD_DATA', loadLists);
 })();

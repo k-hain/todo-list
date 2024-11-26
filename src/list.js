@@ -25,35 +25,54 @@ export const listController = (function () {
 
   let lists = [];
 
-  const addNewList = (msg, name) => {
-    lists.push(new List(name));
-    PubSub.publish('LISTS_DRAW', lists);
-    PubSub.publish('LISTS_SAVE', lists);
+  const addList = (name) => {
+      lists.push(new List(name));
+      PubSub.publish('SAVE_DATA', lists);
   };
 
-  const listAddNewToken = 
-    PubSub.subscribe('LIST_ADD_NEW', addNewList);
-
-  const loadLists = (msg, loadedLists) => {
-    lists = [];
-    loadedLists.forEach((listElement) => {
-      const newList = new List(listElement.name);
-      listElement.tasks.forEach((task) => {
-        newList.addTask(task.name);
-      })
-      lists.push(newList);
-    })
-    PubSub.publish('LISTS_DRAW', lists);
+  const updateListNames = () => {
+    const listNames = lists.map((el) => el.name);
+    PubSub.publish('UPDATE_LIST_NAMES', listNames);
   };
 
-  const listsLoadToken =
-    PubSub.subscribe('LISTS_LOAD', loadLists);
+  const reviveListData = (msg, storedData) => {
+    if (storedData) {
+      lists = [];
+      storedData.forEach((elList) => {
+        const newList = new List(elList.name);
+        elList.tasks.forEach((elTask) => {
+          newList.addTask(elTask.name);
+        });
+        lists.push(newList);
+      });
+    } else {
+      addList('Personal');
+    }
+    updateListNames();
+    PubSub.publish('SEND_LIST_TO_DRAW', 0);
+  };
+  const reviveListDataToken = PubSub.subscribe('REVIVE_DATA', reviveListData);
 
-  const addTaskToList = (msg, [taskName, listIndex]) => {
+  const requestNewList = (msg, name) => {
+    addList(name);
+    updateListNames();
+  };
+  const requestNewListToken = PubSub.subscribe('NEW_LIST', requestNewList);
+
+  const sendListToDraw = (msg, listIndex) => {
+    PubSub.publish('DRAW_LIST_PAGE', [
+      lists[listIndex].name,
+      lists[listIndex].tasks,
+      listIndex
+    ]);
+  }
+  const sendListToDrawToken =
+    PubSub.subscribe('SEND_LIST_TO_DRAW', sendListToDraw);
+  
+  const requestAddTask = (msg, [taskName, listIndex]) => {
     lists[listIndex].addTask(taskName);
-    PubSub.publish('LISTS_SAVE', lists);
-    PubSub.publish('LIST_PAGE_DRAW', [lists[listIndex], listIndex]);
+    PubSub.publish('SAVE_DATA', lists);
+    PubSub.publish('SEND_LIST_TO_DRAW', listIndex);
   };
-
-  const taskAddNewToken = PubSub.subscribe('TASK_ADD_NEW', addTaskToList);
+  const requestAddTaskToken = PubSub.subscribe('NEW_TASK', requestAddTask);
 })();

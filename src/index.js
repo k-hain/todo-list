@@ -7,74 +7,105 @@ import addIcon from './svg/add_24dp_000000_FILL0_wght400_GRAD0_opsz24.svg';
 
 const displayController = (function () {
   const contentEl = document.getElementById('content');
-  const listsEl = document.getElementById('lists');
-  const addListBtn = document.getElementById('add-list-btn');
+  const sidebarEl = document.getElementById('sidebar');
+  const listsEl = document.createElement('div');
 
-  const initializeNavButtons = (msg) => {
-    addListBtn.addEventListener('click', () => {
+  const clearContents = (domEl) => {
+    while(domEl.firstChild){
+      domEl.removeChild(domEl.firstChild);
+    }
+  };
+
+  const initializePage = (msg) => {
+    drawSidebar();
+    PubSub.publish('LOAD_DATA');
+  };
+  const initializePageToken = 
+    PubSub.subscribe('INITIALIZE_PAGE', initializePage);
+
+  const drawSidebar = () => {
+    drawSidebarHeader(sidebarEl);
+    listsEl.classList.add('lists');
+    sidebarEl.appendChild(listsEl);
+  };
+
+  const drawSidebarHeader = (container) => {
+    const listsHeaderEl = document.createElement('div');
+    listsHeaderEl.classList.add('lists-header');
+    container.appendChild(listsHeaderEl);
+
+    const myListsEl = document.createElement('h3');
+    myListsEl.textContent = 'My Lists';
+    listsHeaderEl.appendChild(myListsEl);
+
+    const addListBtnEl = document.createElement('button');
+    addListBtnEl.classList.add('add-list-btn');
+    const addListBtnIconEl = document.createElement('img');
+    addListBtnIconEl.src = addIcon;
+    addListBtnEl.appendChild(addListBtnIconEl);
+    addListBtnEl.addEventListener('click', () => {
       let newName;
       let keepGoing = true;
       while (keepGoing) {
         newName = prompt('Add a list name');
         if (newName) {
-          PubSub.publish('LIST_ADD_NEW', newName);
+          PubSub.publish('NEW_LIST', newName);
           keepGoing = false;
         } else if (newName === null) {
           keepGoing = false;
         }
       }
     });
+    listsHeaderEl.appendChild(addListBtnEl);
   };
 
-  const pageInitializeToken = 
-    PubSub.subscribe('PAGE_INITIALIZE', initializeNavButtons);
+  const drawSidebarButtons = (msg, listNames) => {
+    clearContents(listsEl);
 
-  const clearContents = (domElement) => {
-    while(domElement.firstChild){
-      domElement.removeChild(domElement.firstChild);
-    }
-  };
-
-  const printListsNav = (lists) => {
-    lists.forEach((list) => {
+    listNames.forEach((listName) => {
       const listNameEl = document.createElement('button');
-      listNameEl.textContent = list.name;
+      listNameEl.textContent = listName;
       listNameEl.addEventListener('click', () => {
-        PubSub.publish('LIST_PAGE_DRAW', [list, lists.indexOf(list)]);
+        PubSub.publish('SEND_LIST_TO_DRAW', listNames.indexOf(listName));
       });
       listsEl.appendChild(listNameEl);
     });
   };
+  const drawSidebarButtonsToken =
+    PubSub.subscribe('UPDATE_LIST_NAMES', drawSidebarButtons);
 
-  const updateListsNav = (msg, lists) => {
-    clearContents(listsEl);
-    printListsNav(lists);
+  const drawListPage = (msg, [listName, tasksArr, listIndex]) => {
+    clearContents(contentEl);
+    drawHeader(listName, contentEl);
+    drawTaskContainer(tasksArr, contentEl);
+    drawNewTaskForm(listIndex, contentEl);
+  };
+  const drawListToken = PubSub.subscribe('DRAW_LIST_PAGE', drawListPage);
+
+  const drawHeader = (text, container) => {
+    const headerEl = document.createElement('h1');
+    headerEl.textContent = text;
+    headerEl.classList.add('page-header');
+    container.appendChild(headerEl);
   };
 
-  const listsDrawToken = 
-    PubSub.subscribe('LISTS_DRAW', updateListsNav);
+  const drawTaskContainer = (tasksArr, container) => {
+    const taskContainerEl = document.createElement('div');
+    taskContainerEl.classList.add('task-container');
+    tasksArr.forEach((task) => {
+      drawTask(task, taskContainerEl);
+    });
+    container.appendChild(taskContainerEl);
+  };
 
-  const printTask = (task, container) => {
+  const drawTask = (task, container) => {
     const taskEl = document.createElement('div');
     taskEl.textContent = task.name;
     taskEl.classList.add('task-card');
     container.appendChild(taskEl);
   };
 
-  const drawListPage = (msg, [list, listIndex]) => {
-    clearContents(contentEl);
-
-    const listNameEl = document.createElement('h1');
-    listNameEl.textContent = list.name;
-    content.appendChild(listNameEl);
-
-    const taskContainerEl = document.createElement('div');
-    taskContainerEl.classList.add('task-container');
-    list.tasks.forEach((task) => {
-      printTask(task, taskContainerEl);
-    });
-    content.appendChild(taskContainerEl);
-
+  const drawNewTaskForm = (indexVal, container) => {
     const addTaskFormEl = document.createElement('form');
     addTaskFormEl.classList.add('add-task');
     const addTaskInputEl = document.createElement('input');
@@ -83,20 +114,19 @@ const displayController = (function () {
     const addTaskBtnEl = document.createElement('button');
     const addTaskBtnIconEl = document.createElement('img');
     addTaskBtnIconEl.src = addIcon;
-
+  
     addTaskBtnEl.appendChild(addTaskBtnIconEl);
     addTaskFormEl.appendChild(addTaskInputEl);
     addTaskFormEl.appendChild(addTaskBtnEl);
-    contentEl.appendChild(addTaskFormEl);
-
+    container.appendChild(addTaskFormEl);
+  
     addTaskFormEl.addEventListener('submit', (event) => {
       event.preventDefault();
-      PubSub.publish('TASK_ADD_NEW', [addTaskInputEl.value, listIndex]);
+      if (addTaskInputEl.value) {
+        PubSub.publish('NEW_TASK', [addTaskInputEl.value, indexVal]);
+      }
     });
   };
-
-  const listPageDrawToken =
-    PubSub.subscribe('LIST_PAGE_DRAW', drawListPage);
 })();
 
-PubSub.publish('PAGE_INITIALIZE');
+PubSub.publish('INITIALIZE_PAGE');

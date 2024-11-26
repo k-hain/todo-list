@@ -99,7 +99,7 @@ button {
   position: absolute;
 }
 
-#lists {
+.lists {
   display: flex;
   flex-direction: column;
   gap: var(--padding-tiny);
