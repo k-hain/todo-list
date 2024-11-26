@@ -3,6 +3,8 @@ import './style.css';
 import { listController } from './list';
 import { storageController } from './storage';
 
+import addIcon from './svg/add_24dp_000000_FILL0_wght400_GRAD0_opsz24.svg';
+
 const displayController = (function () {
   const contentEl = document.getElementById('content');
   const listsEl = document.getElementById('lists');
@@ -38,8 +40,7 @@ const displayController = (function () {
       const listNameEl = document.createElement('button');
       listNameEl.textContent = list.name;
       listNameEl.addEventListener('click', () => {
-        clearContents(contentEl);
-        showListPage(list);
+        PubSub.publish('LIST_PAGE_DRAW', [list, lists.indexOf(list)]);
       });
       listsEl.appendChild(listNameEl);
     });
@@ -53,16 +54,49 @@ const displayController = (function () {
   const listsDrawToken = 
     PubSub.subscribe('LISTS_DRAW', updateListsNav);
 
-  const showListPage = (list) => {
+  const printTask = (task, container) => {
+    const taskEl = document.createElement('div');
+    taskEl.textContent = task.name;
+    taskEl.classList.add('task-card');
+    container.appendChild(taskEl);
+  };
+
+  const drawListPage = (msg, [list, listIndex]) => {
+    clearContents(contentEl);
+
     const listNameEl = document.createElement('h1');
     listNameEl.textContent = list.name;
     content.appendChild(listNameEl);
+
+    const taskContainerEl = document.createElement('div');
+    taskContainerEl.classList.add('task-container');
     list.tasks.forEach((task) => {
-      const taskEl = document.createElement('div');
-      taskEl.textContent = task.name;
-      content.appendChild(taskEl);
+      printTask(task, taskContainerEl);
+    });
+    content.appendChild(taskContainerEl);
+
+    const addTaskFormEl = document.createElement('form');
+    addTaskFormEl.classList.add('add-task');
+    const addTaskInputEl = document.createElement('input');
+    addTaskInputEl.type = 'text';
+    addTaskInputEl.placeholder = 'Add new task';
+    const addTaskBtnEl = document.createElement('button');
+    const addTaskBtnIconEl = document.createElement('img');
+    addTaskBtnIconEl.src = addIcon;
+
+    addTaskBtnEl.appendChild(addTaskBtnIconEl);
+    addTaskFormEl.appendChild(addTaskInputEl);
+    addTaskFormEl.appendChild(addTaskBtnEl);
+    contentEl.appendChild(addTaskFormEl);
+
+    addTaskFormEl.addEventListener('submit', (event) => {
+      event.preventDefault();
+      PubSub.publish('TASK_ADD_NEW', [addTaskInputEl.value, listIndex]);
     });
   };
+
+  const listPageDrawToken =
+    PubSub.subscribe('LIST_PAGE_DRAW', drawListPage);
 })();
 
 PubSub.publish('PAGE_INITIALIZE');

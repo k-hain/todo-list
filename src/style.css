@@ -109,3 +109,32 @@ button {
   display: flex;
   justify-content: space-between;
 }
+
+form.add-task {
+  display: flex;
+  align-items: center;
+  gap: var(--padding-small);
+}
+
+form.add-task button {
+  width: 32px;
+  height: 32px;
+  background-color: var(--color-gray-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.task-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--padding-base);
+  margin-bottom: var(--padding-base);
+}
+
+.task-card {
+  background-color: var(--color-gray-light);
+  display: flex;
+  width: 400px;
+}
