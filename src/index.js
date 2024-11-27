@@ -9,6 +9,7 @@ import addIcon from './svg/add_24dp_000000_FILL0_wght400_GRAD0_opsz24.svg';
 const displayController = (function () {
   const contentEl = document.getElementById('content');
   const sidebarEl = document.getElementById('sidebar');
+  const detailsEl = document.getElementById('details');
   const listsEl = document.createElement('div');
 
   const clearContents = (domEl) => {
@@ -78,7 +79,7 @@ const displayController = (function () {
   const drawListPage = (msg, [listName, tasksArr, listIndex]) => {
     clearContents(contentEl);
     drawHeader(listName, contentEl);
-    drawTaskContainer(tasksArr, contentEl);
+    drawTaskContainer(tasksArr, contentEl, listIndex);
     drawNewTaskForm(listIndex, contentEl);
   };
   const drawListToken = PubSub.subscribe('DRAW_LIST_PAGE', drawListPage);
@@ -90,16 +91,16 @@ const displayController = (function () {
     container.appendChild(headerEl);
   };
 
-  const drawTaskContainer = (tasksArr, container) => {
+  const drawTaskContainer = (tasksArr, container, listIndex) => {
     const taskContainerEl = document.createElement('div');
     taskContainerEl.classList.add('task-container');
     tasksArr.forEach((task) => {
-      drawTask(task, taskContainerEl);
+      drawTask(task, taskContainerEl, tasksArr.indexOf(task), listIndex);
     });
     container.appendChild(taskContainerEl);
   };
 
-  const drawTask = (task, container) => {
+  const drawTask = (task, container, taskIndex, listIndex) => {
     const taskEl = document.createElement('div');
 
     const taskNameEl = document.createElement('div');
@@ -110,7 +111,11 @@ const displayController = (function () {
     taskDueEl.classList.add('due-date');
     taskDueEl.textContent = formatDueDate(task.dueDate);
     taskEl.appendChild(taskDueEl);
-    
+
+    taskEl.addEventListener('click', () => {
+      PubSub.publish('SEND_TASK_TO_DRAW', [listIndex, taskIndex]);
+    })
+
     taskEl.classList.add('task-card');
     container.appendChild(taskEl);
   };
@@ -151,6 +156,31 @@ const displayController = (function () {
       return formatDistanceToNow(dueDate);
     }
   };
+
+  const drawTaskDetails = (msg, [task, listIndex]) => {
+    clearContents(detailsEl);
+    drawHeader(task.name, detailsEl);
+
+    const taskDueDateEl = document.createElement('div');
+    taskDueDateEl.textContent = formatDueDate(task.dueDate);
+    detailsEl.appendChild(taskDueDateEl);
+
+    const priorityEl = document.createElement('div');
+    if (task.priority === 0) {
+      priorityEl.textContent = 'High priority';
+    } else if (task.priority === 1) {
+      priorityEl.textContent = 'Medium priority';
+    } else if (task.priority === 2) {
+      priorityEl.textContent = 'Low priority';
+    }
+    detailsEl.appendChild(priorityEl);
+
+    const descriptionEl = document.createElement('div');
+    descriptionEl.textContent = task.description;
+    detailsEl.appendChild(descriptionEl);
+  };
+  const drawTaskDetailsToken =
+    PubSub.subscribe('DRAW_TASK_DETAILS', drawTaskDetails);
 })();
 
 PubSub.publish('INITIALIZE_PAGE');

@@ -83,6 +83,10 @@ button {
   appearance: none;
 }
 
+button:hover {
+  cursor: grab;
+}
+
 #content {
   width: 30vw;
   margin: 0 auto 0 15vw;
@@ -97,6 +101,7 @@ button {
   position: fixed;
   top: 0px;
   left: 50vw;
+  padding: var(--padding-base);
 }
 
 #sidebar {
@@ -151,6 +156,10 @@ form.add-task button {
   display: flex;
   flex-direction: column;
   padding: var(--padding-small);
+}
+
+.task-card:hover {
+  cursor: grab;
 }
 
 .due-date {

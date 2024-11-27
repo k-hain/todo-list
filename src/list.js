@@ -4,7 +4,7 @@ export const listController = (function () {
   class Task {
     constructor (name) {
       this.name = name;
-      this.description = '';
+      this.description = 'No description';
       this.dueDate = addDays(
         setHours(
           setMinutes(
@@ -14,7 +14,7 @@ export const listController = (function () {
           ), 0
         ), 1
       );
-      this.priority = 0;
+      this.priority = 1;
     }
   }
 
@@ -85,4 +85,13 @@ export const listController = (function () {
     PubSub.publish('SEND_LIST_TO_DRAW', listIndex);
   };
   const requestAddTaskToken = PubSub.subscribe('NEW_TASK', requestAddTask);
+
+  const sendTaskToDraw = (msg, [listIndex, taskIndex]) => {
+    PubSub.publish('DRAW_TASK_DETAILS', [
+      lists[listIndex].tasks[taskIndex],
+      listIndex
+    ]);   
+  };
+  const sendTaskToDrawToken =
+    PubSub.subscribe('SEND_TASK_TO_DRAW', sendTaskToDraw);
 })();
