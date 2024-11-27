@@ -2,6 +2,7 @@ import PubSub from 'pubsub-js';
 import './style.css';
 import { listController } from './list';
 import { storageController } from './storage';
+import { isToday, isTomorrow, isYesterday, formatDistanceToNow, isBefore } from 'date-fns';
 
 import addIcon from './svg/add_24dp_000000_FILL0_wght400_GRAD0_opsz24.svg';
 
@@ -100,7 +101,16 @@ const displayController = (function () {
 
   const drawTask = (task, container) => {
     const taskEl = document.createElement('div');
-    taskEl.textContent = task.name;
+
+    const taskNameEl = document.createElement('div');
+    taskNameEl.textContent = task.name;
+    taskEl.appendChild(taskNameEl);
+    
+    const taskDueEl = document.createElement('div');
+    taskDueEl.classList.add('due-date');
+    taskDueEl.textContent = formatDueDate(task.dueDate);
+    taskEl.appendChild(taskDueEl);
+    
     taskEl.classList.add('task-card');
     container.appendChild(taskEl);
   };
@@ -126,6 +136,20 @@ const displayController = (function () {
         PubSub.publish('NEW_TASK', [addTaskInputEl.value, indexVal]);
       }
     });
+  };
+
+  const formatDueDate = (dueDate) => {
+    if (isYesterday(dueDate)) {
+      return 'Yesterday';
+    } else if (isToday(dueDate)) {
+      return 'Today';
+    } else if (isTomorrow(dueDate)) {
+      return 'Tomorrow';
+    } else if (isBefore(dueDate, new Date())) {
+      return `${formatDistanceToNow(dueDate)} ago`;
+    } else {
+      return formatDistanceToNow(dueDate);
+    }
   };
 })();
 

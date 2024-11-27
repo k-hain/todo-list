@@ -149,5 +149,10 @@ form.add-task button {
 .task-card {
   background-color: var(--color-gray-light);
   display: flex;
-  /*width: 400px;*/
+  flex-direction: column;
+  padding: var(--padding-small);
+}
+
+.due-date {
+  color: var(--color-gray-dark);
 }

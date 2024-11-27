@@ -1,9 +1,19 @@
+import { addDays, setMilliseconds, setSeconds, setMinutes, setHours } from "date-fns";
+
 export const listController = (function () {
   class Task {
     constructor (name) {
       this.name = name;
       this.description = '';
-      this.dueDate = new Date();
+      this.dueDate = addDays(
+        setHours(
+          setMinutes(
+            setSeconds(
+              setMilliseconds(new Date(), 0), 0
+            ), 0
+          ), 0
+        ), 1
+      );
       this.priority = 0;
     }
   }
