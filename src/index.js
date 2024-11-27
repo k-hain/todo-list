@@ -2,7 +2,14 @@ import PubSub from 'pubsub-js';
 import './style.css';
 import { listController } from './list';
 import { storageController } from './storage';
-import { isToday, isTomorrow, isYesterday, formatDistanceToNow, isBefore } from 'date-fns';
+import {
+  isToday,
+  isTomorrow,
+  isYesterday,
+  formatDistanceToNow,
+  isBefore,
+} from 'date-fns';
+import Sortable from 'sortablejs';
 
 import addIcon from './svg/add_24dp_000000_FILL0_wght400_GRAD0_opsz24.svg';
 
@@ -11,6 +18,8 @@ const displayController = (function () {
   const sidebarEl = document.getElementById('sidebar');
   const detailsEl = document.getElementById('details');
   const listsEl = document.createElement('div');
+
+  let displayedListIndex;
 
   const clearContents = (domEl) => {
     while(domEl.firstChild){
@@ -77,6 +86,7 @@ const displayController = (function () {
     PubSub.subscribe('UPDATE_LIST_NAMES', drawSidebarButtons);
 
   const drawListPage = (msg, [listName, tasksArr, listIndex]) => {
+    displayedListIndex = listIndex;
     clearContents(contentEl);
     drawHeader(listName, contentEl);
     drawTaskContainer(tasksArr, contentEl, listIndex);
@@ -97,7 +107,21 @@ const displayController = (function () {
     tasksArr.forEach((task) => {
       drawTask(task, taskContainerEl, tasksArr.indexOf(task), listIndex);
     });
+    Sortable.create(taskContainerEl, taskContainerOptions);
     container.appendChild(taskContainerEl);
+  };
+
+  const taskContainerOptions = {
+    animation: 100,
+    ghostClass: 'task-container-ghost',
+    onEnd: (evt) => {
+      if (evt.oldIndex !== evt.newIndex) {
+        PubSub.publish(
+          'DRAG_TASK',
+          [displayedListIndex, evt.oldIndex, evt.newIndex]
+        );
+      }
+    }
   };
 
   const drawTask = (task, container, taskIndex, listIndex) => {

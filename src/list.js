@@ -94,4 +94,27 @@ export const listController = (function () {
   };
   const sendTaskToDrawToken =
     PubSub.subscribe('SEND_TASK_TO_DRAW', sendTaskToDraw);
+
+  const dragTask = (msg, [listIndex, oldIndex, newIndex]) => {
+    let start = oldIndex;
+    let end = newIndex;
+    let arr = lists[listIndex].tasks;
+
+    if (start < end) {
+      for (let i = start; i < end; i++) {
+        arr.splice(i + 2, 0, arr[i]);
+        arr.splice(i, 1);
+      }
+    } else if (start > end) {
+      for (let i = start; i > end; i--) {
+        arr.splice(i - 1, 0, arr[i]);
+        arr.splice(i + 1, 1);
+      }
+    }
+    
+    PubSub.publish('SAVE_DATA', lists);
+    PubSub.publish('SEND_LIST_TO_DRAW', listIndex);
+  }
+  const dragTaskToken =
+    PubSub.subscribe('DRAG_TASK', dragTask);
 })();

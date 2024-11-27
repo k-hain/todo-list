@@ -165,3 +165,7 @@ form.add-task button {
 .due-date {
   color: var(--color-gray-dark);
 }
+
+.task-container-ghost {
+  background-color: var(--color-gray-dark);
+}
