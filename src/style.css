@@ -47,6 +47,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 :root {
+  --color-main: rgb(0, 89, 255);
+  --color-main-light: rgb(217, 235, 255);
   --color-white: rgb(255, 255, 255);
   --color-black: rgb(0, 0, 0);
   --color-gray-light: rgb(224, 224, 224);
@@ -54,9 +56,9 @@ h1, h2, h3, h4, h5, h6 {
   --color-gray-dark: 	rgb(128,128,128);
   --color-shadow: rgba(20, 20, 40, 0.3);
 
-  --color-priority-0: #ff006a;
-  --color-priority-1: #ff7300;
-  --color-priority-2: #007be0;
+  --color-priority-0: rgb(255, 0, 106);
+  --color-priority-1: rgb(255, 115, 0);
+  --color-priority-2: var(--color-main);
 
   --shadow-card: var(--color-shadow) 0px 4px 12px;
 
@@ -66,6 +68,7 @@ h1, h2, h3, h4, h5, h6 {
   --padding-large: 24px;
 
   --border-radius: 16px;
+  --border-radius-small: 4px;
 }
 
 html {
@@ -88,6 +91,17 @@ button {
 
 button:hover {
   cursor: grab;
+}
+
+input {
+  border: var(--color-gray-medium) solid 1px;
+  border-radius: var(--border-radius-small);
+  padding: var(--padding-tiny);
+}
+
+input:focus {
+  outline: var(--color-main) solid 2px;
+  border-color: white;
 }
 
 #content {
@@ -140,11 +154,24 @@ form.add-task {
 form.add-task button {
   width: 32px;
   height: 32px;
-  background-color: var(--color-gray-light);
+  background-color: var(--color-main-light);
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
+}
+
+form.add-task button:hover {
+  background-color: var(--color-main);
+}
+
+form.add-task button:hover img {
+  filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(256deg) brightness(105%) contrast(105%);
+}
+
+form.add-task input {
+  width: 240px;
+  height: 40px;
 }
 
 .task-container {
@@ -169,7 +196,7 @@ form.add-task button {
 }
 
 .priority-2 {
-  filter: invert(67%) sepia(96%) saturate(6999%) hue-rotate(192deg) brightness(97%) contrast(101%);
+  filter: invert(19%) sepia(96%) saturate(3833%) hue-rotate(218deg) brightness(102%) contrast(107%);
 }
 
 .task-card:hover {
