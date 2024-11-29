@@ -54,8 +54,11 @@ h1, h2, h3, h4, h5, h6 {
   --color-gray-dark: 	rgb(128,128,128);
   --color-shadow: rgba(20, 20, 40, 0.3);
 
-  --shadow-card: var(--color-shadow) 0px 4px 12px;
+  --color-priority-0: #ff006a;
+  --color-priority-1: #ff7300;
+  --color-priority-2: #007be0;
 
+  --shadow-card: var(--color-shadow) 0px 4px 12px;
 
   --padding-tiny: 4px;
   --padding-small: 8px;
@@ -152,14 +155,36 @@ form.add-task button {
 }
 
 .task-card {
-  background-color: var(--color-gray-light);
   display: flex;
-  flex-direction: column;
   padding: var(--padding-small);
+  gap: var(--padding-small);
+}
+
+.priority-0 {
+  filter: invert(18%) sepia(64%) saturate(6267%) hue-rotate(326deg) brightness(95%) contrast(114%);
+}
+
+.priority-1 {
+  filter: invert(53%) sepia(48%) saturate(4281%) hue-rotate(360deg) brightness(101%) contrast(108%);
+}
+
+.priority-2 {
+  filter: invert(67%) sepia(96%) saturate(6999%) hue-rotate(192deg) brightness(97%) contrast(101%);
 }
 
 .task-card:hover {
   cursor: grab;
+}
+
+.task-icon {
+  align-self: flex-start;
+  padding-top: 2px;
+}
+
+.task-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--padding-tiny);
 }
 
 .due-date {

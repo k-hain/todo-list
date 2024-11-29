@@ -12,6 +12,8 @@ import {
 import Sortable from 'sortablejs';
 
 import addIcon from './svg/add_24dp_000000_FILL0_wght400_GRAD0_opsz24.svg';
+//import taskIcon from './svg/sticky_note_2_24dp_000000_FILL0_wght400_GRAD0_opsz24.svg';
+import taskIcon from './svg/circle_16dp_000000_FILL0_wght400_GRAD0_opsz20.svg';
 
 const displayController = (function () {
   const contentEl = document.getElementById('content');
@@ -128,14 +130,31 @@ const displayController = (function () {
   const drawTask = (task, container, taskIndex, listIndex) => {
     const taskEl = document.createElement('div');
 
+    const taskIconEl = document.createElement('img');
+    taskIconEl.src = taskIcon;
+    taskIconEl.classList.add('task-icon');
+    if (task.priority === 0) {
+      taskIconEl.classList.add('priority-0');
+    } else if (task.priority === 1) {
+      taskIconEl.classList.add('priority-1');
+    } else if (task.priority === 2) {
+      taskIconEl.classList.add('priority-2');
+    }
+    taskEl.appendChild(taskIconEl);
+
+    const taskHeaderEl = document.createElement('div');
+    taskHeaderEl.classList.add('task-header');
+    
     const taskNameEl = document.createElement('div');
     taskNameEl.textContent = task.name;
-    taskEl.appendChild(taskNameEl);
-    
+    taskHeaderEl.appendChild(taskNameEl);
+
     const taskDueEl = document.createElement('div');
     taskDueEl.classList.add('due-date');
     taskDueEl.textContent = formatDueDate(task.dueDate);
-    taskEl.appendChild(taskDueEl);
+    taskHeaderEl.appendChild(taskDueEl);
+
+    taskEl.appendChild(taskHeaderEl);
 
     taskEl.addEventListener('click', () => {
       PubSub.publish('SEND_TASK_TO_DRAW', [listIndex, taskIndex]);

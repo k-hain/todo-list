@@ -2,19 +2,11 @@ import { addDays, setMilliseconds, setSeconds, setMinutes, setHours } from "date
 
 export const listController = (function () {
   class Task {
-    constructor (name) {
+    constructor (name, priority, dueDate) {
       this.name = name;
       this.description = 'No description';
-      this.dueDate = addDays(
-        setHours(
-          setMinutes(
-            setSeconds(
-              setMilliseconds(new Date(), 0), 0
-            ), 0
-          ), 0
-        ), 1
-      );
-      this.priority = 1;
+      this.dueDate = dueDate;
+      this.priority = priority;
     }
   }
 
@@ -24,8 +16,8 @@ export const listController = (function () {
       this.tasks = [];
     }
 
-    addTask(taskName) {
-      this.tasks.push(new Task(taskName));
+    addTask(taskName, taskPriority, dueDate) {
+      this.tasks.push(new Task(taskName, taskPriority, dueDate));
     }
 
     deleteTask(taskIndex) {
@@ -51,7 +43,7 @@ export const listController = (function () {
       storedData.forEach((elList) => {
         const newList = new List(elList.name);
         elList.tasks.forEach((elTask) => {
-          newList.addTask(elTask.name);
+          newList.addTask(elTask.name, elTask.priority, elTask.dueDate);
         });
         lists.push(newList);
       });
@@ -80,7 +72,19 @@ export const listController = (function () {
     PubSub.subscribe('SEND_LIST_TO_DRAW', sendListToDraw);
   
   const requestAddTask = (msg, [taskName, listIndex]) => {
-    lists[listIndex].addTask(taskName);
+    lists[listIndex].addTask(
+      taskName,
+      1,
+      addDays(
+        setHours(
+          setMinutes(
+            setSeconds(
+              setMilliseconds(new Date(), 0), 0
+            ), 0
+          ), 0
+        ), 1
+      )
+    );
     PubSub.publish('SAVE_DATA', lists);
     PubSub.publish('SEND_LIST_TO_DRAW', listIndex);
   };
