@@ -88,6 +88,7 @@ const displayController = (function () {
   const drawListPage = (msg, [listName, tasksArr, listIndex]) => {
     displayedListIndex = listIndex;
     clearContents(contentEl);
+    clearContents(detailsEl);
     drawHeader(listName, contentEl);
     drawTaskContainer(tasksArr, contentEl, listIndex);
     drawNewTaskForm(listIndex, contentEl);
