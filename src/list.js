@@ -55,6 +55,15 @@ export const listController = (function () {
   };
   const reviveListDataToken = PubSub.subscribe('REVIVE_DATA', reviveListData);
 
+  const zeroedDate = (date) => {
+    return setHours(setMinutes(setSeconds(setMilliseconds(date, 0), 0), 0), 0);
+  }
+
+  const saveAndPrintList = (listIndex) => {
+    PubSub.publish('SAVE_DATA', lists);
+    PubSub.publish('SEND_LIST_TO_DRAW', listIndex);
+  }
+
   const requestNewList = (msg, name) => {
     addList(name);
     updateListNames();
@@ -72,21 +81,8 @@ export const listController = (function () {
     PubSub.subscribe('SEND_LIST_TO_DRAW', sendListToDraw);
   
   const requestAddTask = (msg, [taskName, listIndex]) => {
-    lists[listIndex].addTask(
-      taskName,
-      1,
-      addDays(
-        setHours(
-          setMinutes(
-            setSeconds(
-              setMilliseconds(new Date(), 0), 0
-            ), 0
-          ), 0
-        ), 1
-      )
-    );
-    PubSub.publish('SAVE_DATA', lists);
-    PubSub.publish('SEND_LIST_TO_DRAW', listIndex);
+    lists[listIndex].addTask(taskName, 1, addDays(zeroedDate(new Date()), 1));
+    saveAndPrintList(listIndex);
   };
   const requestAddTaskToken = PubSub.subscribe('NEW_TASK', requestAddTask);
 
@@ -99,7 +95,7 @@ export const listController = (function () {
   const sendTaskToDrawToken =
     PubSub.subscribe('SEND_TASK_TO_DRAW', sendTaskToDraw);
 
-  const dragTask = (msg, [listIndex, oldIndex, newIndex]) => {
+  const requestDragTask = (msg, [listIndex, oldIndex, newIndex]) => {
     let start = oldIndex;
     let end = newIndex;
     let arr = lists[listIndex].tasks;
@@ -115,10 +111,16 @@ export const listController = (function () {
         arr.splice(i + 1, 1);
       }
     }
-    
-    PubSub.publish('SAVE_DATA', lists);
-    PubSub.publish('SEND_LIST_TO_DRAW', listIndex);
+
+    saveAndPrintList(listIndex);
   }
-  const dragTaskToken =
-    PubSub.subscribe('DRAG_TASK', dragTask);
+  const requestDragTaskToken =
+    PubSub.subscribe('DRAG_TASK', requestDragTask);
+
+  const requestChangeTaskDate = (msg, [listIndex, taskIndex, inputDate]) => {
+    lists[listIndex].tasks[taskIndex].dueDate = zeroedDate(new Date(inputDate));
+    saveAndPrintList(listIndex);
+  }
+  const requestChangeTaskDateToken =
+  PubSub.subscribe('CHANGE_TASK_DATE', requestChangeTaskDate);
 })();

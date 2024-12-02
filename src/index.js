@@ -8,12 +8,13 @@ import {
   isYesterday,
   formatDistanceToNow,
   isBefore,
+  formatISO,
 } from 'date-fns';
 import Sortable from 'sortablejs';
 
 import addIcon from './svg/add_24dp_000000_FILL0_wght400_GRAD0_opsz24.svg';
-//import taskIcon from './svg/sticky_note_2_24dp_000000_FILL0_wght400_GRAD0_opsz24.svg';
 import taskIcon from './svg/circle_16dp_000000_FILL0_wght400_GRAD0_opsz20.svg';
+import dueIcon from './svg/calendar_month_16dp_000000_FILL0_wght400_GRAD0_opsz20.svg';
 
 const displayController = (function () {
   const contentEl = document.getElementById('content');
@@ -150,15 +151,42 @@ const displayController = (function () {
     taskHeaderEl.appendChild(taskNameEl);
 
     const taskDueEl = document.createElement('div');
-    taskDueEl.classList.add('due-date');
-    taskDueEl.textContent = formatDueDate(task.dueDate);
     taskHeaderEl.appendChild(taskDueEl);
+
+    const taskDuePickerEl = document.createElement('input');
+    taskDuePickerEl.type = 'date';
+    taskDuePickerEl.id = 'date-picker';
+    taskDuePickerEl.value = formatISO(task.dueDate, { representation: 'date' });
+    taskDueEl.appendChild(taskDuePickerEl);
+
+    const taskDueButtonEl = document.createElement('button');
+    taskDueButtonEl.classList.add('due-date');
+
+    const taskDueIconEl = document.createElement('img');
+    taskDueIconEl.src = dueIcon;
+    taskDueButtonEl.appendChild(taskDueIconEl);
+
+    const taskDueLabelEl = document.createElement('span');
+    taskDueLabelEl.textContent = formatDueDate(task.dueDate);
+    taskDueButtonEl.appendChild(taskDueLabelEl);
+
+    taskDueEl.appendChild(taskDueButtonEl);
+
+    taskDueButtonEl.addEventListener('click', (evt) => {
+      evt.stopPropagation();
+      taskDuePickerEl.showPicker();
+    });
+
+    taskDuePickerEl.addEventListener('input', (evt) => {
+      console.log(taskDuePickerEl.value);
+      PubSub.publish('CHANGE_TASK_DATE', [listIndex, taskIndex, taskDuePickerEl.value])
+    });
 
     taskEl.appendChild(taskHeaderEl);
 
     taskEl.addEventListener('click', () => {
       PubSub.publish('SEND_TASK_TO_DRAW', [listIndex, taskIndex]);
-    })
+    });
 
     taskEl.classList.add('task-card');
     container.appendChild(taskEl);

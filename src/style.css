@@ -53,7 +53,7 @@ h1, h2, h3, h4, h5, h6 {
   --color-black: rgb(0, 0, 0);
   --color-gray-light: rgb(224, 224, 224);
   --color-gray-medium: rgb(192,192,192);
-  --color-gray-dark: 	rgb(128,128,128);
+  --color-gray-dark: 	rgb(128, 128, 128);
   --color-shadow: rgba(20, 20, 40, 0.3);
 
   --color-priority-0: rgb(255, 0, 106);
@@ -216,8 +216,23 @@ form.add-task input {
 
 .due-date {
   color: var(--color-gray-dark);
+  display: flex;
+  align-items: center;
+  gap: var(--padding-tiny);
+}
+
+.due-date img {
+  width: 16px;
+  filter: invert(54%) sepia(0%) saturate(0%) hue-rotate(75deg) brightness(92%) contrast(89%);
 }
 
 .task-container-ghost {
   background-color: var(--color-gray-dark);
+}
+
+#date-picker {
+  visibility: hidden;
+  position: absolute;
+  width: 24px;
+  height: 24px;
 }
