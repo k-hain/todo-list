@@ -107,7 +107,7 @@ input:focus {
 #content {
   width: 30vw;
   margin: 0 auto 0 15vw;
-  padding: var(--padding-base);
+  padding: var(--padding-large);
   grid-column: 1 / span 1;
   justify-self: stretch;
 }
@@ -118,7 +118,7 @@ input:focus {
   position: fixed;
   top: 0px;
   left: 50vw;
-  padding: var(--padding-base);
+  padding: var(--padding-large);
 }
 
 #sidebar {
@@ -132,6 +132,10 @@ input:focus {
   position: fixed;
   top: 0px;
   left: 0px;
+}
+
+.page-header {
+  margin-bottom: var(--padding-large);
 }
 
 .lists {
