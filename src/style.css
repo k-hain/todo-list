@@ -67,7 +67,7 @@ h1, h2, h3, h4, h5, h6 {
   --padding-base: 16px;
   --padding-large: 24px;
 
-  --border-radius: 16px;
+  --border-radius: 8px;
   --border-radius-small: 4px;
 }
 
@@ -189,6 +189,7 @@ form.add-task input {
   display: flex;
   padding: var(--padding-small);
   gap: var(--padding-small);
+  width: 60%;
 }
 
 .priority-0 {
@@ -271,7 +272,8 @@ form.add-task input {
 }
 
 .task-container-ghost {
-  background-color: var(--color-gray-dark);
+  background-color: var(--color-main-light);
+  border-radius: var(--border-radius);
 }
 
 #date-picker {
