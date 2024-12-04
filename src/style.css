@@ -213,8 +213,7 @@ form.add-task input {
   padding-top: 2px;
 }
 
-.task-icon-hover-done,
-.task-icon-hover-not-done {
+.task-icon-hover {
   position: absolute;
   align-self: flex-start;
   padding-top: 2px;
@@ -222,11 +221,11 @@ form.add-task input {
   z-index: -1;
 }
 
-.task-icon-hover-not-done {
+.task-icon-hover {
   visibility: hidden;
 }
 
-.task-done-button:hover + .task-icon-hover-not-done {
+.task-done-button:hover + .task-icon-hover {
   visibility: visible;
 }
 
@@ -235,21 +234,15 @@ form.add-task input {
   color: var(--color-gray-medium);
 }
 
-.task-finished .task-icon {
-  visibility: hidden;
-}
-
-.task-finished .task-done-button:hover .task-icon {
-  visibility: visible;
-  opacity: 0.4;
-}
-
-.task-finished .task-icon-hover-done {
-  opacity: 1;
+.task-finished .task-header .due-date img {
   filter: invert(78%) sepia(0%) saturate(0%) hue-rotate(240deg) brightness(101%) contrast(89%);
 }
 
-.task-done-button:hover + .task-icon-hover-done {
+.task-finished .task-icon {
+  filter: invert(78%) sepia(0%) saturate(0%) hue-rotate(240deg) brightness(101%) contrast(89%);
+}
+
+.task-finished .task-done-button:hover .task-icon {
   visibility: hidden;
 }
 

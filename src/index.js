@@ -13,8 +13,8 @@ import {
 import Sortable from 'sortablejs';
 
 import addIcon from './svg/add_24dp_000000_FILL0_wght400_GRAD0_opsz24.svg';
-import taskIcon from './svg/circle_16dp_000000_FILL0_wght400_GRAD0_opsz20.svg';
-import taskIconHover from './svg/task_alt_16dp_000000_FILL0_wght400_GRAD0_opsz20.svg';
+import taskIconEmpty from './svg/circle_16dp_000000_FILL0_wght400_GRAD0_opsz20.svg';
+import taskIconChecked from './svg/task_alt_16dp_000000_FILL0_wght400_GRAD0_opsz20.svg';
 import dueIcon from './svg/calendar_month_16dp_000000_FILL0_wght400_GRAD0_opsz20.svg';
 
 const displayController = (function () {
@@ -140,7 +140,6 @@ const displayController = (function () {
     });
 
     const taskIconEl = document.createElement('img');
-    taskIconEl.src = taskIcon;
     taskIconEl.classList.add('task-icon');
     if (task.priority === 0) {
       taskIconEl.classList.add('priority-0');
@@ -149,12 +148,9 @@ const displayController = (function () {
     } else if (task.priority === 2) {
       taskIconEl.classList.add('priority-2');
     }    
-
     taskButtonDoneEl.appendChild(taskIconEl);
-    taskEl.appendChild(taskButtonDoneEl);
     
     const taskIconHoverEl = document.createElement('img');
-    taskIconHoverEl.src = taskIconHover;
     if (task.priority === 0) {
       taskIconHoverEl.classList.add('priority-0');
     } else if (task.priority === 1) {
@@ -162,13 +158,18 @@ const displayController = (function () {
     } else if (task.priority === 2) {
       taskIconHoverEl.classList.add('priority-2');
     }
-    taskEl.appendChild(taskIconHoverEl);
+    taskIconHoverEl.classList.add('task-icon-hover');
 
     if (task.isFinished) {
-      taskIconHoverEl.classList.add('task-icon-hover-done');
+      taskIconHoverEl.src = taskIconEmpty;
+      taskIconEl.src = taskIconChecked;
     } else if (!task.isFinished) {
-      taskIconHoverEl.classList.add('task-icon-hover-not-done');
+      taskIconHoverEl.src = taskIconChecked;
+      taskIconEl.src = taskIconEmpty;
     }
+
+    taskEl.appendChild(taskButtonDoneEl);
+    taskEl.appendChild(taskIconHoverEl);
 
     const taskHeaderEl = document.createElement('div');
     taskHeaderEl.classList.add('task-header');
