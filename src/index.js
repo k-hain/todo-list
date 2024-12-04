@@ -14,6 +14,7 @@ import Sortable from 'sortablejs';
 
 import addIcon from './svg/add_24dp_000000_FILL0_wght400_GRAD0_opsz24.svg';
 import taskIcon from './svg/circle_16dp_000000_FILL0_wght400_GRAD0_opsz20.svg';
+import taskIconHover from './svg/task_alt_16dp_000000_FILL0_wght400_GRAD0_opsz20.svg';
 import dueIcon from './svg/calendar_month_16dp_000000_FILL0_wght400_GRAD0_opsz20.svg';
 
 const displayController = (function () {
@@ -131,6 +132,13 @@ const displayController = (function () {
   const drawTask = (task, container, taskIndex, listIndex) => {
     const taskEl = document.createElement('div');
 
+    const taskButtonDoneEl = document.createElement('button');
+    taskButtonDoneEl.classList.add('task-done-button');
+
+    taskButtonDoneEl.addEventListener('click', () => {
+      PubSub.publish('CHANGE_TASK_ISFINISHED', [listIndex, taskIndex]);
+    });
+
     const taskIconEl = document.createElement('img');
     taskIconEl.src = taskIcon;
     taskIconEl.classList.add('task-icon');
@@ -140,8 +148,27 @@ const displayController = (function () {
       taskIconEl.classList.add('priority-1');
     } else if (task.priority === 2) {
       taskIconEl.classList.add('priority-2');
+    }    
+
+    taskButtonDoneEl.appendChild(taskIconEl);
+    taskEl.appendChild(taskButtonDoneEl);
+    
+    const taskIconHoverEl = document.createElement('img');
+    taskIconHoverEl.src = taskIconHover;
+    if (task.priority === 0) {
+      taskIconHoverEl.classList.add('priority-0');
+    } else if (task.priority === 1) {
+      taskIconHoverEl.classList.add('priority-1');
+    } else if (task.priority === 2) {
+      taskIconHoverEl.classList.add('priority-2');
     }
-    taskEl.appendChild(taskIconEl);
+    taskEl.appendChild(taskIconHoverEl);
+
+    if (task.isFinished) {
+      taskIconHoverEl.classList.add('task-icon-hover-done');
+    } else if (!task.isFinished) {
+      taskIconHoverEl.classList.add('task-icon-hover-not-done');
+    }
 
     const taskHeaderEl = document.createElement('div');
     taskHeaderEl.classList.add('task-header');
@@ -189,6 +216,9 @@ const displayController = (function () {
     });
 
     taskEl.classList.add('task-card');
+    if (task.isFinished) {
+      taskEl.classList.add('task-finished');
+    }
     container.appendChild(taskEl);
   };
 

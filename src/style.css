@@ -52,7 +52,7 @@ h1, h2, h3, h4, h5, h6 {
   --color-white: rgb(255, 255, 255);
   --color-black: rgb(0, 0, 0);
   --color-gray-light: rgb(224, 224, 224);
-  --color-gray-medium: rgb(192,192,192);
+  --color-gray-medium: rgb(192, 192, 192);
   --color-gray-dark: 	rgb(128, 128, 128);
   --color-shadow: rgba(20, 20, 40, 0.3);
 
@@ -90,7 +90,7 @@ button {
 }
 
 button:hover {
-  cursor: grab;
+  cursor: pointer;
 }
 
 input {
@@ -207,9 +207,49 @@ form.add-task input {
   cursor: grab;
 }
 
-.task-icon {
+.task-done-button {
   align-self: flex-start;
   padding-top: 2px;
+}
+
+.task-icon-hover-done,
+.task-icon-hover-not-done {
+  position: absolute;
+  align-self: flex-start;
+  padding-top: 2px;
+  opacity: 0.4;
+  z-index: -1;
+}
+
+.task-icon-hover-not-done {
+  visibility: hidden;
+}
+
+.task-done-button:hover + .task-icon-hover-not-done {
+  visibility: visible;
+}
+
+.task-finished * {
+  text-decoration-line: line-through;
+  color: var(--color-gray-medium);
+}
+
+.task-finished .task-icon {
+  visibility: hidden;
+}
+
+.task-finished .task-done-button:hover .task-icon {
+  visibility: visible;
+  opacity: 0.4;
+}
+
+.task-finished .task-icon-hover-done {
+  opacity: 1;
+  filter: invert(78%) sepia(0%) saturate(0%) hue-rotate(240deg) brightness(101%) contrast(89%);
+}
+
+.task-done-button:hover + .task-icon-hover-done {
+  visibility: hidden;
 }
 
 .task-header {

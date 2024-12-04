@@ -2,11 +2,12 @@ import { addDays, setMilliseconds, setSeconds, setMinutes, setHours } from "date
 
 export const listController = (function () {
   class Task {
-    constructor (name, priority, dueDate) {
+    constructor (name, priority, dueDate, description, isFinished) {
       this.name = name;
-      this.description = 'No description';
+      this.description = description;
       this.dueDate = dueDate;
       this.priority = priority;
+      this.isFinished = isFinished;
     }
   }
 
@@ -16,8 +17,16 @@ export const listController = (function () {
       this.tasks = [];
     }
 
-    addTask(taskName, taskPriority, dueDate) {
-      this.tasks.push(new Task(taskName, taskPriority, dueDate));
+    addTask(
+      taskName, taskPriority, taskDueDate, taskDescription, taskIsFinished
+    ) {
+      this.tasks.push(new Task(
+        taskName,
+        taskPriority,
+        taskDueDate,
+        taskDescription,
+        taskIsFinished
+      ));
     }
 
     deleteTask(taskIndex) {
@@ -43,7 +52,7 @@ export const listController = (function () {
       storedData.forEach((elList) => {
         const newList = new List(elList.name);
         elList.tasks.forEach((elTask) => {
-          newList.addTask(elTask.name, elTask.priority, elTask.dueDate);
+          newList.addTask(elTask.name, elTask.priority, elTask.dueDate, elTask.description, elTask.isFinished);
         });
         lists.push(newList);
       });
@@ -81,7 +90,7 @@ export const listController = (function () {
     PubSub.subscribe('SEND_LIST_TO_DRAW', sendListToDraw);
   
   const requestAddTask = (msg, [taskName, listIndex]) => {
-    lists[listIndex].addTask(taskName, 1, addDays(zeroedDate(new Date()), 1));
+    lists[listIndex].addTask(taskName, 1, addDays(zeroedDate(new Date()), 1), 'No description', 0);
     saveAndPrintList(listIndex);
   };
   const requestAddTaskToken = PubSub.subscribe('NEW_TASK', requestAddTask);
@@ -122,5 +131,16 @@ export const listController = (function () {
     saveAndPrintList(listIndex);
   }
   const requestChangeTaskDateToken =
-  PubSub.subscribe('CHANGE_TASK_DATE', requestChangeTaskDate);
+    PubSub.subscribe('CHANGE_TASK_DATE', requestChangeTaskDate);
+
+  const requestChangeTaskIsFinished = (msg, [listIndex, taskIndex]) => {
+    if (!lists[listIndex].tasks[taskIndex].isFinished) {
+      lists[listIndex].tasks[taskIndex].isFinished = 1;
+    } else if (lists[listIndex].tasks[taskIndex].isFinished) {
+      lists[listIndex].tasks[taskIndex].isFinished = 0;
+    }
+    saveAndPrintList(listIndex);
+  }
+  const requestChangeTaskIsFinishedToken =
+    PubSub.subscribe('CHANGE_TASK_ISFINISHED', requestChangeTaskIsFinished);
 })();
