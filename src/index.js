@@ -131,6 +131,14 @@ const displayController = (function () {
 
   const drawTask = (task, container, taskIndex, listIndex) => {
     const taskEl = document.createElement('div');
+    drawTaskDoneButton(taskEl, task, taskIndex, listIndex);
+    drawTaskBody(taskEl, task, taskIndex, listIndex);
+    container.appendChild(taskEl);
+  };
+
+  const drawTaskDoneButton = (container, task, taskIndex, listIndex) => {
+    const taskButtonContainerEl = document.createElement('div');
+    taskButtonContainerEl.classList.add('task-button-container');
 
     const taskButtonDoneEl = document.createElement('button');
     taskButtonDoneEl.classList.add('task-done-button');
@@ -168,17 +176,21 @@ const displayController = (function () {
       taskIconEl.src = taskIconEmpty;
     }
 
-    taskEl.appendChild(taskButtonDoneEl);
-    taskEl.appendChild(taskIconHoverEl);
+    taskButtonContainerEl.appendChild(taskButtonDoneEl);
+    taskButtonContainerEl.appendChild(taskIconHoverEl);
+    container.appendChild(taskButtonContainerEl);
+  };
 
+  const drawTaskBody = (container, task, taskIndex, listIndex) => {
     const taskHeaderEl = document.createElement('div');
     taskHeaderEl.classList.add('task-header');
     
-    const taskNameEl = document.createElement('div');
+    const taskNameEl = document.createElement('h4');
     taskNameEl.textContent = task.name;
     taskHeaderEl.appendChild(taskNameEl);
 
     const taskDueEl = document.createElement('div');
+    taskDueEl.classList.add('due-date-container');
     taskHeaderEl.appendChild(taskDueEl);
 
     const taskDuePickerEl = document.createElement('input');
@@ -210,17 +222,16 @@ const displayController = (function () {
       PubSub.publish('CHANGE_TASK_DATE', [listIndex, taskIndex, taskDuePickerEl.value])
     });
 
-    taskEl.appendChild(taskHeaderEl);
+    container.appendChild(taskHeaderEl);
 
-    taskEl.addEventListener('click', () => {
+    container.addEventListener('click', () => {
       PubSub.publish('SEND_TASK_TO_DRAW', [listIndex, taskIndex]);
     });
 
-    taskEl.classList.add('task-card');
+    container.classList.add('task-card');
     if (task.isFinished) {
-      taskEl.classList.add('task-finished');
+      container.classList.add('task-finished');
     }
-    container.appendChild(taskEl);
   };
 
   const drawNewTaskForm = (indexVal, container) => {
