@@ -227,9 +227,6 @@ form.add-task input {
   padding-top: 2px;
   opacity: 0.4;
   z-index: -1;
-}
-
-.task-icon-hover {
   visibility: hidden;
 }
 
@@ -240,6 +237,10 @@ form.add-task input {
 .task-finished * {
   text-decoration-line: line-through;
   color: var(--color-gray-medium);
+}
+
+.task-finished .task-done-button:hover {
+  opacity: 0;
 }
 
 .task-finished .task-header .due-date img {
