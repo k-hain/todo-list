@@ -148,24 +148,12 @@ const displayController = (function () {
     });
 
     const taskIconEl = document.createElement('img');
+    addPriorityStyling(taskIconEl, task);
     taskIconEl.classList.add('task-icon');
-    if (task.priority === 0) {
-      taskIconEl.classList.add('priority-0');
-    } else if (task.priority === 1) {
-      taskIconEl.classList.add('priority-1');
-    } else if (task.priority === 2) {
-      taskIconEl.classList.add('priority-2');
-    }    
     taskButtonDoneEl.appendChild(taskIconEl);
     
     const taskIconHoverEl = document.createElement('img');
-    if (task.priority === 0) {
-      taskIconHoverEl.classList.add('priority-0');
-    } else if (task.priority === 1) {
-      taskIconHoverEl.classList.add('priority-1');
-    } else if (task.priority === 2) {
-      taskIconHoverEl.classList.add('priority-2');
-    }
+    addPriorityStyling(taskIconHoverEl, task);
     taskIconHoverEl.classList.add('task-icon-hover');
 
     if (task.isFinished) {
@@ -231,6 +219,16 @@ const displayController = (function () {
     container.classList.add('task-card');
     if (task.isFinished) {
       container.classList.add('task-finished');
+    }
+  };
+
+  const addPriorityStyling = (element, task) => {
+    if (task.priority === 0) {
+      element.classList.add('priority-0');
+    } else if (task.priority === 1) {
+      element.classList.add('priority-1');
+    } else if (task.priority === 2) {
+      element.classList.add('priority-2');
     }
   };
 
