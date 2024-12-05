@@ -198,7 +198,9 @@ const displayController = (function () {
     });
 
     taskDuePickerEl.addEventListener('input', (evt) => {
-      console.log(taskDuePickerEl.value);
+      if (!taskDuePickerEl.value) {
+        taskDuePickerEl.value = formatISO(new Date(), { representation: 'date' });
+      }
       PubSub.publish('CHANGE_TASK_DATE', [
         listIndex, taskIndex, taskDuePickerEl.value
       ])
