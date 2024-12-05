@@ -25,6 +25,34 @@ const displayController = (function () {
 
   let displayedListIndex;
 
+  const drawDomElement = (elType, container, cssClasses, text) => {
+    const domEl = document.createElement(elType);
+    container.appendChild(domEl);
+    if (cssClasses !== undefined && cssClasses.length) {
+      addCssClasses(domEl, cssClasses);
+    }
+    if (text) {
+      domEl.textContent = text;
+    }
+    return domEl;
+  };
+
+  const drawImgElement = (imgSrc, container, cssClasses) => {
+    const domEl = document.createElement('img');
+    container.appendChild(domEl);
+    domEl.src = imgSrc;
+    if (cssClasses !== undefined && cssClasses.length) {
+      addCssClasses(domEl, cssClasses);
+    }
+    return domEl;
+  };
+
+  const addCssClasses = (el, cssClasses) => {
+    cssClasses.forEach((cssClass) => {
+      el.classList.add(cssClass);
+    });
+  };
+
   const clearContents = (domEl) => {
     while(domEl.firstChild){
       domEl.removeChild(domEl.firstChild);
@@ -45,19 +73,11 @@ const displayController = (function () {
   };
 
   const drawSidebarHeader = (container) => {
-    const listsHeaderEl = document.createElement('div');
-    listsHeaderEl.classList.add('lists-header');
-    container.appendChild(listsHeaderEl);
+    const listsHeaderEl = drawDomElement('div', container, ['lists-header']);
+    drawDomElement('h3', listsHeaderEl, [], 'My lists');
+    const addListBtnEl = drawDomElement('button', listsHeaderEl, ['add-list-btn']);
+    drawImgElement(addIcon, addListBtnEl);
 
-    const myListsEl = document.createElement('h3');
-    myListsEl.textContent = 'My Lists';
-    listsHeaderEl.appendChild(myListsEl);
-
-    const addListBtnEl = document.createElement('button');
-    addListBtnEl.classList.add('add-list-btn');
-    const addListBtnIconEl = document.createElement('img');
-    addListBtnIconEl.src = addIcon;
-    addListBtnEl.appendChild(addListBtnIconEl);
     addListBtnEl.addEventListener('click', () => {
       let newName;
       let keepGoing = true;
@@ -71,19 +91,15 @@ const displayController = (function () {
         }
       }
     });
-    listsHeaderEl.appendChild(addListBtnEl);
   };
 
   const drawSidebarButtons = (msg, listNames) => {
     clearContents(listsEl);
-
     listNames.forEach((listName) => {
-      const listNameEl = document.createElement('button');
-      listNameEl.textContent = listName;
+      const listNameEl = drawDomElement('button', listsEl, [], listName);
       listNameEl.addEventListener('click', () => {
         PubSub.publish('SEND_LIST_TO_DRAW', listNames.indexOf(listName));
       });
-      listsEl.appendChild(listNameEl);
     });
   };
   const drawSidebarButtonsToken =
@@ -93,27 +109,18 @@ const displayController = (function () {
     displayedListIndex = listIndex;
     clearContents(contentEl);
     clearContents(detailsEl);
-    drawHeader(listName, contentEl);
+    drawDomElement('h1', contentEl, ['page-header'], listName);
     drawTaskContainer(tasksArr, contentEl, listIndex);
     drawNewTaskForm(listIndex, contentEl);
   };
   const drawListToken = PubSub.subscribe('DRAW_LIST_PAGE', drawListPage);
 
-  const drawHeader = (text, container) => {
-    const headerEl = document.createElement('h1');
-    headerEl.textContent = text;
-    headerEl.classList.add('page-header');
-    container.appendChild(headerEl);
-  };
-
   const drawTaskContainer = (tasksArr, container, listIndex) => {
-    const taskContainerEl = document.createElement('div');
-    taskContainerEl.classList.add('task-container');
+    const taskContainerEl = drawDomElement('div', container, ['task-container']);
     tasksArr.forEach((task) => {
       drawTask(task, taskContainerEl, tasksArr.indexOf(task), listIndex);
     });
     Sortable.create(taskContainerEl, taskContainerOptions);
-    container.appendChild(taskContainerEl);
   };
 
   const taskContainerOptions = {
@@ -130,56 +137,50 @@ const displayController = (function () {
   };
 
   const drawTask = (task, container, taskIndex, listIndex) => {
-    const taskEl = document.createElement('div');
+    const taskEl = drawDomElement('div', container, ['task-card']);
+    if (task.isFinished) {
+      taskEl.classList.add('task-finished');
+    }
     drawTaskDoneButton(taskEl, task, taskIndex, listIndex);
     drawTaskBody(taskEl, task, taskIndex, listIndex);
-    container.appendChild(taskEl);
+
+    taskEl.addEventListener('click', () => {
+      PubSub.publish('SEND_TASK_TO_DRAW', [listIndex, taskIndex]);
+    });
   };
 
   const drawTaskDoneButton = (container, task, taskIndex, listIndex) => {
-    const taskButtonContainerEl = document.createElement('div');
-    taskButtonContainerEl.classList.add('task-button-container');
-
-    const taskButtonDoneEl = document.createElement('button');
-    taskButtonDoneEl.classList.add('task-done-button');
+    const taskButtonContainerEl = drawDomElement(
+      'div', container, ['task-button-container']
+    );
+    const taskButtonDoneEl = drawDomElement(
+      'button', taskButtonContainerEl, ['task-done-button']
+    );
 
     taskButtonDoneEl.addEventListener('click', () => {
       PubSub.publish('CHANGE_TASK_ISFINISHED', [listIndex, taskIndex]);
     });
 
-    const taskIconEl = document.createElement('img');
-    addPriorityStyling(taskIconEl, task);
-    taskIconEl.classList.add('task-icon');
-    taskButtonDoneEl.appendChild(taskIconEl);
-    
-    const taskIconHoverEl = document.createElement('img');
-    addPriorityStyling(taskIconHoverEl, task);
-    taskIconHoverEl.classList.add('task-icon-hover');
-
+    const taskIconEl = drawImgElement(
+      taskIconEmpty, taskButtonDoneEl, ['task-icon']
+    );
+    const taskIconHoverEl = drawImgElement(
+      taskIconChecked, taskButtonContainerEl, ['task-icon-hover']
+    );
     if (task.isFinished) {
       taskIconHoverEl.src = taskIconEmpty;
       taskIconEl.src = taskIconChecked;
-    } else if (!task.isFinished) {
-      taskIconHoverEl.src = taskIconChecked;
-      taskIconEl.src = taskIconEmpty;
     }
 
-    taskButtonContainerEl.appendChild(taskButtonDoneEl);
-    taskButtonContainerEl.appendChild(taskIconHoverEl);
-    container.appendChild(taskButtonContainerEl);
+    addPriorityStyling(taskIconEl, task);
+    addPriorityStyling(taskIconHoverEl, task);
+
   };
 
   const drawTaskBody = (container, task, taskIndex, listIndex) => {
-    const taskHeaderEl = document.createElement('div');
-    taskHeaderEl.classList.add('task-header');
-    
-    const taskNameEl = document.createElement('h4');
-    taskNameEl.textContent = task.name;
-    taskHeaderEl.appendChild(taskNameEl);
-
-    const taskDueEl = document.createElement('div');
-    taskDueEl.classList.add('due-date-container');
-    taskHeaderEl.appendChild(taskDueEl);
+    const taskHeaderEl = drawDomElement('div', container, ['task-header']);
+    drawDomElement('h4', taskHeaderEl, [], task.name);
+    const taskDueEl = drawDomElement('div', taskHeaderEl, ['due-date-container']);
 
     const taskDuePickerEl = document.createElement('input');
     taskDuePickerEl.type = 'date';
@@ -187,18 +188,9 @@ const displayController = (function () {
     taskDuePickerEl.value = formatISO(task.dueDate, { representation: 'date' });
     taskDueEl.appendChild(taskDuePickerEl);
 
-    const taskDueButtonEl = document.createElement('button');
-    taskDueButtonEl.classList.add('due-date');
-
-    const taskDueIconEl = document.createElement('img');
-    taskDueIconEl.src = dueIcon;
-    taskDueButtonEl.appendChild(taskDueIconEl);
-
-    const taskDueLabelEl = document.createElement('span');
-    taskDueLabelEl.textContent = formatDueDate(task.dueDate);
-    taskDueButtonEl.appendChild(taskDueLabelEl);
-
-    taskDueEl.appendChild(taskDueButtonEl);
+    const taskDueButtonEl = drawDomElement('button', taskDueEl, ['due-date']);
+    drawImgElement(dueIcon, taskDueButtonEl);
+    drawDomElement('span', taskDueButtonEl, [], formatDueDate(task.dueDate));
 
     taskDueButtonEl.addEventListener('click', (evt) => {
       evt.stopPropagation();
@@ -207,19 +199,10 @@ const displayController = (function () {
 
     taskDuePickerEl.addEventListener('input', (evt) => {
       console.log(taskDuePickerEl.value);
-      PubSub.publish('CHANGE_TASK_DATE', [listIndex, taskIndex, taskDuePickerEl.value])
+      PubSub.publish('CHANGE_TASK_DATE', [
+        listIndex, taskIndex, taskDuePickerEl.value
+      ])
     });
-
-    container.appendChild(taskHeaderEl);
-
-    container.addEventListener('click', () => {
-      PubSub.publish('SEND_TASK_TO_DRAW', [listIndex, taskIndex]);
-    });
-
-    container.classList.add('task-card');
-    if (task.isFinished) {
-      container.classList.add('task-finished');
-    }
   };
 
   const addPriorityStyling = (element, task) => {
@@ -233,19 +216,15 @@ const displayController = (function () {
   };
 
   const drawNewTaskForm = (indexVal, container) => {
-    const addTaskFormEl = document.createElement('form');
-    addTaskFormEl.classList.add('add-task');
+    const addTaskFormEl = drawDomElement('form', container, ['add-task']);
+
     const addTaskInputEl = document.createElement('input');
     addTaskInputEl.type = 'text';
     addTaskInputEl.placeholder = 'Add new task';
-    const addTaskBtnEl = document.createElement('button');
-    const addTaskBtnIconEl = document.createElement('img');
-    addTaskBtnIconEl.src = addIcon;
-  
-    addTaskBtnEl.appendChild(addTaskBtnIconEl);
     addTaskFormEl.appendChild(addTaskInputEl);
-    addTaskFormEl.appendChild(addTaskBtnEl);
-    container.appendChild(addTaskFormEl);
+
+    const addTaskBtnEl = drawDomElement('button', addTaskFormEl);
+    drawImgElement(addIcon, addTaskBtnEl);
   
     addTaskFormEl.addEventListener('submit', (event) => {
       event.preventDefault();
@@ -271,11 +250,8 @@ const displayController = (function () {
 
   const drawTaskDetails = (msg, [task, listIndex]) => {
     clearContents(detailsEl);
-    drawHeader(task.name, detailsEl);
-
-    const taskDueDateEl = document.createElement('div');
-    taskDueDateEl.textContent = formatDueDate(task.dueDate);
-    detailsEl.appendChild(taskDueDateEl);
+    drawDomElement('h1', detailsEl, [], task.name);
+    drawDomElement('div', detailsEl, [], formatDueDate(task.dueDate));
 
     const priorityEl = document.createElement('div');
     if (task.priority === 0) {
@@ -287,9 +263,7 @@ const displayController = (function () {
     }
     detailsEl.appendChild(priorityEl);
 
-    const descriptionEl = document.createElement('div');
-    descriptionEl.textContent = task.description;
-    detailsEl.appendChild(descriptionEl);
+    drawDomElement('div', detailsEl, [], task.description);
   };
   const drawTaskDetailsToken =
     PubSub.subscribe('DRAW_TASK_DETAILS', drawTaskDetails);
