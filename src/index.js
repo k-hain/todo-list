@@ -119,11 +119,13 @@ const displayController = (function () {
 
   const drawTaskContainer = (tasksArr, container, listIndex) => {
     const taskContainerEl = drawDomElement('div', container, ['task-container']);
-    tasksArr.forEach((task) => {
-      drawTask(task, taskContainerEl, tasksArr.indexOf(task), listIndex);
-    });
-    Sortable.create(taskContainerEl, taskContainerOptions);
-    PubSub.publish('DRAW_TASK_DETAILS', [tasksArr[displayedTaskIndex], listIndex])
+    if (tasksArr.length) {
+      tasksArr.forEach((task) => {
+        drawTask(task, taskContainerEl, tasksArr.indexOf(task), listIndex);
+      });
+      Sortable.create(taskContainerEl, taskContainerOptions);
+      PubSub.publish('DRAW_TASK_DETAILS', [tasksArr[displayedTaskIndex], listIndex])
+    }
   };
 
   const taskContainerOptions = {
