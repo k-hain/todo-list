@@ -124,11 +124,7 @@ input:focus {
   position: fixed;
   top: 0px;
   left: 50vw;
-  padding: var(--padding-large);
   margin: var(--padding-large) 0;
-  border: 1px var(--color-gray-light) solid;
-  box-shadow: var(--shadow-card);
-  border-radius: var(--border-radius);
 }
 
 #sidebar {
@@ -143,6 +139,14 @@ input:focus {
   left: 0px;
   box-shadow: var(--shadow-sidebar);
   border-right: 1px var(--color-gray-light) solid;;
+}
+
+.details-container {
+  padding: var(--padding-large);
+  border: 1px var(--color-gray-light) solid;
+  box-shadow: var(--shadow-card);
+  border-radius: var(--border-radius);
+  height: 100%;
 }
 
 .page-header {

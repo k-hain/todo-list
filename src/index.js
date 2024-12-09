@@ -281,10 +281,11 @@ const displayController = (function () {
 
   const drawTaskDetails = (msg, [task, listIndex]) => {
     clearContents(detailsEl);
-    drawDomElement('h1', detailsEl, [], task.name);
-    drawDomElement('div', detailsEl, [], formatDueDate(task.dueDate));
-    drawDomElement('div', detailsEl, [], getPriorityName(task.priority));
-    drawDomElement('div', detailsEl, [], task.description);
+    const detailsContainerEl = drawDomElement('div', detailsEl, ['details-container']);
+    drawDomElement('h1', detailsContainerEl, [], task.name);
+    drawDomElement('div', detailsContainerEl, [], formatDueDate(task.dueDate));
+    drawDomElement('div', detailsContainerEl, [], getPriorityName(task.priority));
+    drawDomElement('div', detailsContainerEl, [], task.description);
   };
   const drawTaskDetailsToken =
     PubSub.subscribe('DRAW_TASK_DETAILS', drawTaskDetails);
