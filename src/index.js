@@ -250,21 +250,21 @@ const displayController = (function () {
     }
   };
 
+  const getPriorityName = (priority) => {
+    if (priority === 0) {
+      return 'High priority';
+    } else if (priority === 1) {
+      return 'Medium priority';
+    } else if (task.priority === 2) {
+      return 'Low priority';
+    }
+  }
+
   const drawTaskDetails = (msg, [task, listIndex]) => {
     clearContents(detailsEl);
     drawDomElement('h1', detailsEl, [], task.name);
     drawDomElement('div', detailsEl, [], formatDueDate(task.dueDate));
-
-    const priorityEl = document.createElement('div');
-    if (task.priority === 0) {
-      priorityEl.textContent = 'High priority';
-    } else if (task.priority === 1) {
-      priorityEl.textContent = 'Medium priority';
-    } else if (task.priority === 2) {
-      priorityEl.textContent = 'Low priority';
-    }
-    detailsEl.appendChild(priorityEl);
-
+    drawDomElement('div', detailsEl, [], getPriorityName(task.priority));
     drawDomElement('div', detailsEl, [], task.description);
   };
   const drawTaskDetailsToken =
