@@ -133,13 +133,15 @@ const displayController = (function () {
     ghostClass: 'task-container-ghost',
     onEnd: (evt) => {
       if (evt.oldIndex !== evt.newIndex) {
-        if (
-          evt.oldIndex >= displayedTaskIndex &&
+        if (evt.oldIndex === displayedTaskIndex) {
+          displayedTaskIndex = evt.newIndex;
+        } else if (
+          evt.oldIndex > displayedTaskIndex &&
           evt.newIndex < displayedTaskIndex
         ) {
           displayedTaskIndex -= 1;
         } else if (
-          evt.oldIndex <= displayedTaskIndex &&
+          evt.oldIndex < displayedTaskIndex &&
           evt.newIndex > displayedTaskIndex
         ) {
           displayedTaskIndex += 1;
