@@ -258,6 +258,10 @@ form.add-task input {
   filter: invert(78%) sepia(0%) saturate(0%) hue-rotate(240deg) brightness(101%) contrast(89%);
 }
 
+.task-selected {
+  background-color: red;
+}
+
 .task-header {
   display: flex;
   flex-direction: column;

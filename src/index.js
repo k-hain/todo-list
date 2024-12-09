@@ -24,6 +24,7 @@ const displayController = (function () {
   const listsEl = document.createElement('div');
 
   let displayedListIndex;
+  let displayedTaskIndex = 0;
 
   const drawDomElement = (elType, container, cssClasses, text) => {
     const domEl = document.createElement(elType);
@@ -98,6 +99,7 @@ const displayController = (function () {
     listNames.forEach((listName) => {
       const listNameEl = drawDomElement('button', listsEl, [], listName);
       listNameEl.addEventListener('click', () => {
+        displayedTaskIndex = 0;
         PubSub.publish('SEND_LIST_TO_DRAW', listNames.indexOf(listName));
       });
     });
@@ -121,6 +123,7 @@ const displayController = (function () {
       drawTask(task, taskContainerEl, tasksArr.indexOf(task), listIndex);
     });
     Sortable.create(taskContainerEl, taskContainerOptions);
+    PubSub.publish('DRAW_TASK_DETAILS', [tasksArr[displayedTaskIndex], listIndex])
   };
 
   const taskContainerOptions = {
@@ -128,6 +131,17 @@ const displayController = (function () {
     ghostClass: 'task-container-ghost',
     onEnd: (evt) => {
       if (evt.oldIndex !== evt.newIndex) {
+        if (
+          evt.oldIndex >= displayedTaskIndex &&
+          evt.newIndex < displayedTaskIndex
+        ) {
+          displayedTaskIndex -= 1;
+        } else if (
+          evt.oldIndex <= displayedTaskIndex &&
+          evt.newIndex > displayedTaskIndex
+        ) {
+          displayedTaskIndex += 1;
+        }
         PubSub.publish(
           'DRAG_TASK',
           [displayedListIndex, evt.oldIndex, evt.newIndex]
@@ -145,6 +159,7 @@ const displayController = (function () {
     drawTaskBody(taskEl, task, taskIndex, listIndex);
 
     taskEl.addEventListener('click', () => {
+      displayedTaskIndex = taskIndex;
       PubSub.publish('SEND_TASK_TO_DRAW', [listIndex, taskIndex]);
     });
   };
@@ -255,7 +270,7 @@ const displayController = (function () {
       return 'High priority';
     } else if (priority === 1) {
       return 'Medium priority';
-    } else if (task.priority === 2) {
+    } else if (priority === 2) {
       return 'Low priority';
     }
   }
