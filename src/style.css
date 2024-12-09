@@ -70,6 +70,7 @@ h1, h2, h3, h4, h5, h6 {
 
   --border-radius: 8px;
   --border-radius-small: 4px;
+  --border-radius-button: 16px;
 }
 
 html {
@@ -107,6 +108,24 @@ input {
 input:focus {
   outline: var(--color-main) solid 2px;
   border-color: white;
+}
+
+.button-wide {
+  display: flex;
+  align-items: center;
+  gap: var(--padding-small);
+  padding: var(--padding-tiny) var(--padding-base);
+  border-radius: var(--border-radius-button);
+  background-color: var(--color-main-light);
+}
+
+.button-wide:hover {
+  background-color: var(--color-main);
+  color: var(--color-white);
+}
+
+.button-wide:hover img {
+  filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(256deg) brightness(105%) contrast(105%);
 }
 
 #content {
@@ -147,6 +166,12 @@ input:focus {
   box-shadow: var(--shadow-card);
   border-radius: var(--border-radius);
   height: 100%;
+}
+
+.details-header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .page-header {

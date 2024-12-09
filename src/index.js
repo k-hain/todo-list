@@ -16,6 +16,7 @@ import addIcon from './svg/add_24dp_000000_FILL0_wght400_GRAD0_opsz24.svg';
 import taskIconEmpty from './svg/circle_16dp_000000_FILL0_wght400_GRAD0_opsz20.svg';
 import taskIconChecked from './svg/task_alt_16dp_000000_FILL0_wght400_GRAD0_opsz20.svg';
 import dueIcon from './svg/calendar_month_16dp_000000_FILL0_wght400_GRAD0_opsz20.svg';
+import deleteIcon from './svg/delete_forever_24dp_000000_FILL0_wght400_GRAD0_opsz24.svg';
 
 const displayController = (function () {
   const contentEl = document.getElementById('content');
@@ -282,7 +283,14 @@ const displayController = (function () {
   const drawTaskDetails = (msg, [task, listIndex]) => {
     clearContents(detailsEl);
     const detailsContainerEl = drawDomElement('div', detailsEl, ['details-container']);
-    drawDomElement('h1', detailsContainerEl, [], task.name);
+    const detailsHeaderContainerEl = drawDomElement('div', detailsContainerEl, ['details-header-container']);
+    drawDomElement('h1', detailsHeaderContainerEl, [], task.name);
+    const deleteTaskButtonEl = drawDomElement('button', detailsHeaderContainerEl, ['button-wide']);
+    deleteTaskButtonEl.addEventListener('click', () => {
+      alert('pressed delete');
+    });
+    drawImgElement(deleteIcon, deleteTaskButtonEl);
+    drawDomElement('span', deleteTaskButtonEl, [], 'Delete task');
     drawDomElement('div', detailsContainerEl, [], formatDueDate(task.dueDate));
     drawDomElement('div', detailsContainerEl, [], getPriorityName(task.priority));
     drawDomElement('div', detailsContainerEl, [], task.description);
