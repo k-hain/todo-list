@@ -54,13 +54,14 @@ h1, h2, h3, h4, h5, h6 {
   --color-gray-light: rgb(224, 224, 224);
   --color-gray-medium: rgb(192, 192, 192);
   --color-gray-dark: 	rgb(128, 128, 128);
-  --color-shadow: rgba(20, 20, 40, 0.3);
+  --color-shadow: rgba(20, 20, 40, 0.1);
 
   --color-priority-0: rgb(255, 0, 106);
   --color-priority-1: rgb(255, 115, 0);
   --color-priority-2: var(--color-main);
 
-  --shadow-card: var(--color-shadow) 0px 4px 12px;
+  --shadow-card: var(--color-shadow) 0px 4px 8px;
+  --shadow-sidebar: var(--color-shadow) 4px 0px 8px;
 
   --padding-tiny: 4px;
   --padding-small: 8px;
@@ -110,19 +111,24 @@ input:focus {
 
 #content {
   width: 30vw;
-  margin: 0 auto 0 15vw;
+  min-height: calc(100vh - 2 * var(--padding-large));
+  margin: var(--padding-large) auto var(--padding-large) 15vw;
   padding: var(--padding-large);
   grid-column: 1 / span 1;
   justify-self: stretch;
 }
 
 #details {
-  height: 100vh;
+  height: calc(100vh - 2 * var(--padding-large));
   width: 30vw;
   position: fixed;
   top: 0px;
   left: 50vw;
   padding: var(--padding-large);
+  margin: var(--padding-large) 0;
+  border: 1px var(--color-gray-light) solid;
+  box-shadow: var(--shadow-card);
+  border-radius: var(--border-radius);
 }
 
 #sidebar {
@@ -132,10 +138,11 @@ input:focus {
   flex-direction: column;
   padding: var(--padding-base);
   gap: var(--padding-tiny);
-  background-color: var(--color-gray-medium);
   position: fixed;
   top: 0px;
   left: 0px;
+  box-shadow: var(--shadow-sidebar);
+  border-right: 1px var(--color-gray-light) solid;;
 }
 
 .page-header {
