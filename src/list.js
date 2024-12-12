@@ -30,7 +30,7 @@ export const listController = (function () {
     }
 
     deleteTask(taskIndex) {
-      this.tasks.splice(taskIndex, 0);
+      this.tasks.splice(taskIndex, 1);
     }
   }
 
@@ -95,9 +95,16 @@ export const listController = (function () {
   };
   const requestAddTaskToken = PubSub.subscribe('NEW_TASK', requestAddTask);
 
+  const requestDeleteTask = (msg, [listIndex, taskIndex]) => {
+    lists[listIndex].deleteTask(taskIndex);
+    saveAndPrintList(listIndex);
+  };
+  const requestDeleteTaskToken = PubSub.subscribe('DELETE_TASK', requestDeleteTask);
+
   const sendTaskToDraw = (msg, [listIndex, taskIndex]) => {
     PubSub.publish('DRAW_TASK_DETAILS', [
       lists[listIndex].tasks[taskIndex],
+      taskIndex,
       listIndex
     ]);   
   };

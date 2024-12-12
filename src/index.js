@@ -125,7 +125,7 @@ const displayController = (function () {
         drawTask(task, taskContainerEl, tasksArr.indexOf(task), listIndex);
       });
       Sortable.create(taskContainerEl, taskContainerOptions);
-      PubSub.publish('DRAW_TASK_DETAILS', [tasksArr[displayedTaskIndex], listIndex])
+      PubSub.publish('DRAW_TASK_DETAILS', [tasksArr[displayedTaskIndex], displayedTaskIndex, listIndex])
     }
   };
 
@@ -280,14 +280,16 @@ const displayController = (function () {
     }
   }
 
-  const drawTaskDetails = (msg, [task, listIndex]) => {
+  const drawTaskDetails = (msg, [task, taskIndex, listIndex]) => {
     clearContents(detailsEl);
     const detailsContainerEl = drawDomElement('div', detailsEl, ['details-container']);
     const detailsHeaderContainerEl = drawDomElement('div', detailsContainerEl, ['details-header-container']);
     drawDomElement('h1', detailsHeaderContainerEl, [], task.name);
     const deleteTaskButtonEl = drawDomElement('button', detailsHeaderContainerEl, ['button-wide']);
     deleteTaskButtonEl.addEventListener('click', () => {
-      alert('pressed delete');
+      if(confirm(`Delete ${task.name}?`)) {
+        PubSub.publish('DELETE_TASK', [listIndex, taskIndex]);
+      }
     });
     drawImgElement(deleteIcon, deleteTaskButtonEl);
     drawDomElement('span', deleteTaskButtonEl, [], 'Delete task');
