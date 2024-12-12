@@ -3,6 +3,11 @@ import './style.css';
 import { listController } from './list';
 import { storageController } from './storage';
 import {
+  drawDomElement,
+  drawImgElement,
+  clearContents
+} from './dom-edit';
+import {
   isToday,
   isTomorrow,
   isYesterday,
@@ -26,40 +31,6 @@ const displayController = (function () {
 
   let displayedListIndex;
   let displayedTaskIndex = 0;
-
-  const drawDomElement = (elType, container, cssClasses, text) => {
-    const domEl = document.createElement(elType);
-    container.appendChild(domEl);
-    if (cssClasses !== undefined && cssClasses.length) {
-      addCssClasses(domEl, cssClasses);
-    }
-    if (text) {
-      domEl.textContent = text;
-    }
-    return domEl;
-  };
-
-  const drawImgElement = (imgSrc, container, cssClasses) => {
-    const domEl = document.createElement('img');
-    container.appendChild(domEl);
-    domEl.src = imgSrc;
-    if (cssClasses !== undefined && cssClasses.length) {
-      addCssClasses(domEl, cssClasses);
-    }
-    return domEl;
-  };
-
-  const addCssClasses = (el, cssClasses) => {
-    cssClasses.forEach((cssClass) => {
-      el.classList.add(cssClass);
-    });
-  };
-
-  const clearContents = (domEl) => {
-    while(domEl.firstChild){
-      domEl.removeChild(domEl.firstChild);
-    }
-  };
 
   const initializePage = (msg) => {
     drawSidebar();
