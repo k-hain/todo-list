@@ -193,6 +193,7 @@ form.add-task {
   display: flex;
   align-items: center;
   gap: var(--padding-small);
+  width: 50%;
 }
 
 form.add-task button {
@@ -214,7 +215,7 @@ form.add-task button:hover img {
 }
 
 form.add-task input {
-  width: 240px;
+  flex-grow: 1;
   height: 40px;
 }
 
@@ -229,7 +230,6 @@ form.add-task input {
   display: flex;
   padding: var(--padding-small);
   gap: var(--padding-small);
-  width: 60%;
   border: 1px solid transparent;
 }
 
