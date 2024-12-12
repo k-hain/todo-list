@@ -136,6 +136,11 @@ button.round {
   border-radius: 50%;
 }
 
+button.small {
+  width: 24px;
+  height: 24px;
+}
+
 input {
   border: var(--color-gray-medium) solid 1px;
   border-radius: var(--border-radius-small);
@@ -171,7 +176,7 @@ input:focus {
   display: flex;
   flex-direction: column;
   padding: var(--padding-base);
-  gap: var(--padding-tiny);
+  gap: var(--padding-base);
   position: fixed;
   top: 0px;
   left: 0px;
@@ -200,12 +205,13 @@ input:focus {
 .lists {
   display: flex;
   flex-direction: column;
-  gap: var(--padding-tiny);
+  gap: var(--padding-small);
 }
 
 .lists-header {
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
 form.add-task {

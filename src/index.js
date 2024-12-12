@@ -48,7 +48,9 @@ const displayController = (function () {
   const drawSidebarHeader = (container) => {
     const listsHeaderEl = drawDomElement('div', container, ['lists-header']);
     drawDomElement('h3', listsHeaderEl, [], 'My lists');
-    const addListBtnEl = drawDomElement('button', listsHeaderEl, ['add-list-btn']);
+    const addListBtnEl = drawDomElement(
+      'button', listsHeaderEl, ['round', 'small', 'colored']
+    );
     drawImgElement(addIcon, addListBtnEl);
 
     addListBtnEl.addEventListener('click', () => {
