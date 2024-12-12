@@ -180,8 +180,11 @@ const displayController = (function () {
   const drawTaskBody = (container, task, taskIndex, listIndex) => {
     const taskHeaderEl = drawDomElement('div', container, ['task-header']);
     drawDomElement('h4', taskHeaderEl, [], task.name);
-    const taskDueEl = drawDomElement('div', taskHeaderEl, ['due-date-container']);
+    drawTaskDate(taskHeaderEl, task, taskIndex, listIndex);
+  };
 
+  const drawTaskDate = (container, task, taskIndex, listIndex) => {
+    const taskDueEl = drawDomElement('div', container, ['due-date-container']);
     const taskDuePickerEl = document.createElement('input');
     taskDuePickerEl.type = 'date';
     taskDuePickerEl.id = 'date-picker';
@@ -203,7 +206,7 @@ const displayController = (function () {
       }
       PubSub.publish('CHANGE_TASK_DATE', [
         listIndex, taskIndex, taskDuePickerEl.value
-      ])
+      ]);
     });
   };
 
@@ -273,7 +276,7 @@ const displayController = (function () {
     });
     drawImgElement(deleteIcon, deleteTaskButtonEl);
     drawDomElement('span', deleteTaskButtonEl, [], 'Delete task');
-    drawDomElement('div', detailsContainerEl, [], formatDueDate(task.dueDate));
+    drawTaskDate(detailsContainerEl, task, taskIndex, listIndex);
     drawDomElement('div', detailsContainerEl, [], getPriorityName(task.priority));
     drawDomElement('div', detailsContainerEl, [], task.description);
   };

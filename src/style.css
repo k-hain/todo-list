@@ -141,6 +141,18 @@ button.small {
   height: 24px;
 }
 
+button.due-date {
+  color: var(--color-gray-dark);
+  display: flex;
+  align-items: center;
+  gap: var(--padding-tiny);
+}
+
+button.due-date img {
+  width: 16px;
+  filter: var(--filter-black-to-gray-dark);
+}
+
 input {
   border: var(--color-gray-medium) solid 1px;
   border-radius: var(--border-radius-small);
@@ -287,7 +299,7 @@ form.add-task input {
   opacity: 0;
 }
 
-.task-finished .task-header .due-date img {
+.task-finished button.due-date img {
   filter: var(--filter-black-to-gray-medium);
 }
 
@@ -309,18 +321,6 @@ form.add-task input {
   border: 1px var(--color-gray-light) solid;
   box-shadow: var(--shadow-card);
   border-radius: var(--border-radius);
-}
-
-.due-date {
-  color: var(--color-gray-dark);
-  display: flex;
-  align-items: center;
-  gap: var(--padding-tiny);
-}
-
-.due-date img {
-  width: 16px;
-  filter: var(--filter-black-to-gray-dark);
 }
 
 .task-container-ghost {
