@@ -230,6 +230,7 @@ form.add-task input {
   padding: var(--padding-small);
   gap: var(--padding-small);
   width: 60%;
+  border: 1px solid transparent;
 }
 
 .task-button-container {
@@ -295,6 +296,12 @@ form.add-task input {
   display: flex;
   flex-direction: column;
   gap: var(--padding-tiny);
+}
+
+.task-highlighted {
+  border: 1px var(--color-gray-light) solid;
+  box-shadow: var(--shadow-card);
+  border-radius: var(--border-radius);
 }
 
 .due-date {

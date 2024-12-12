@@ -128,6 +128,9 @@ const displayController = (function () {
 
   const drawTask = (task, container, taskIndex, listIndex) => {
     const taskEl = drawDomElement('div', container, ['task-card']);
+    if (taskIndex === displayedTaskIndex) {
+      taskEl.classList.add('task-highlighted');
+    }
     if (task.isFinished) {
       taskEl.classList.add('task-finished');
     }
@@ -136,6 +139,10 @@ const displayController = (function () {
 
     taskEl.addEventListener('click', () => {
       displayedTaskIndex = taskIndex;
+      container
+        .querySelector('.task-highlighted')
+        .classList.remove('task-highlighted');
+      taskEl.classList.add('task-highlighted');
       PubSub.publish('SEND_TASK_TO_DRAW', [listIndex, taskIndex]);
     });
   };
