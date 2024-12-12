@@ -278,7 +278,7 @@ const displayController = (function () {
     } else if (priority === 2) {
       return 'Low priority';
     }
-  }
+  };
 
   const drawTaskDetails = (msg, [task, taskIndex, listIndex]) => {
     clearContents(detailsEl);

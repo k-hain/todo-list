@@ -66,12 +66,12 @@ export const listController = (function () {
 
   const zeroedDate = (date) => {
     return setHours(setMinutes(setSeconds(setMilliseconds(date, 0), 0), 0), 0);
-  }
+  };
 
   const saveAndPrintList = (listIndex) => {
     PubSub.publish('SAVE_DATA', lists);
     PubSub.publish('SEND_LIST_TO_DRAW', listIndex);
-  }
+  };
 
   const requestNewList = (msg, name) => {
     addList(name);
@@ -85,7 +85,7 @@ export const listController = (function () {
       lists[listIndex].tasks,
       listIndex
     ]);
-  }
+  };
   const sendListToDrawToken =
     PubSub.subscribe('SEND_LIST_TO_DRAW', sendListToDraw);
   
@@ -129,14 +129,14 @@ export const listController = (function () {
     }
 
     saveAndPrintList(listIndex);
-  }
+  };
   const requestDragTaskToken =
     PubSub.subscribe('DRAG_TASK', requestDragTask);
 
   const requestChangeTaskDate = (msg, [listIndex, taskIndex, inputDate]) => {
     lists[listIndex].tasks[taskIndex].dueDate = zeroedDate(new Date(inputDate));
     saveAndPrintList(listIndex);
-  }
+  };
   const requestChangeTaskDateToken =
     PubSub.subscribe('CHANGE_TASK_DATE', requestChangeTaskDate);
 
@@ -147,7 +147,7 @@ export const listController = (function () {
       lists[listIndex].tasks[taskIndex].isFinished = 0;
     }
     saveAndPrintList(listIndex);
-  }
+  };
   const requestChangeTaskIsFinishedToken =
     PubSub.subscribe('CHANGE_TASK_ISFINISHED', requestChangeTaskIsFinished);
 })();
