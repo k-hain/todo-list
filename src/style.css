@@ -106,6 +106,36 @@ button:hover {
   cursor: pointer;
 }
 
+button.colored {
+  background-color: var(--color-main-light);
+}
+
+button.colored:hover {
+  background-color: var(--color-main);
+  color: var(--color-white);
+}
+
+button.colored:hover img {
+  filter: var(--filter-black-to-white);
+}
+
+button.wide {
+  display: flex;
+  align-items: center;
+  gap: var(--padding-small);
+  padding: var(--padding-tiny) var(--padding-base);
+  border-radius: var(--border-radius-button);
+}
+
+button.round {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
 input {
   border: var(--color-gray-medium) solid 1px;
   border-radius: var(--border-radius-small);
@@ -115,24 +145,6 @@ input {
 input:focus {
   outline: var(--color-main) solid 2px;
   border-color: white;
-}
-
-.button-wide {
-  display: flex;
-  align-items: center;
-  gap: var(--padding-small);
-  padding: var(--padding-tiny) var(--padding-base);
-  border-radius: var(--border-radius-button);
-  background-color: var(--color-main-light);
-}
-
-.button-wide:hover {
-  background-color: var(--color-main);
-  color: var(--color-white);
-}
-
-.button-wide:hover img {
-  filter: var(--filter-black-to-white);
 }
 
 #content {
@@ -201,24 +213,6 @@ form.add-task {
   align-items: center;
   gap: var(--padding-small);
   width: 50%;
-}
-
-form.add-task button {
-  width: 32px;
-  height: 32px;
-  background-color: var(--color-main-light);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-}
-
-form.add-task button:hover {
-  background-color: var(--color-main);
-}
-
-form.add-task button:hover img {
-  filter: var(--filter-black-to-white);
 }
 
 form.add-task input {

@@ -223,7 +223,7 @@ const displayController = (function () {
     addTaskInputEl.placeholder = 'Add new task';
     addTaskFormEl.appendChild(addTaskInputEl);
 
-    const addTaskBtnEl = drawDomElement('button', addTaskFormEl);
+    const addTaskBtnEl = drawDomElement('button', addTaskFormEl, ['round', 'colored']);
     drawImgElement(addIcon, addTaskBtnEl);
   
     addTaskFormEl.addEventListener('submit', (event) => {
@@ -263,7 +263,7 @@ const displayController = (function () {
     const detailsContainerEl = drawDomElement('div', detailsEl, ['details-container']);
     const detailsHeaderContainerEl = drawDomElement('div', detailsContainerEl, ['details-header-container']);
     drawDomElement('h1', detailsHeaderContainerEl, [], task.name);
-    const deleteTaskButtonEl = drawDomElement('button', detailsHeaderContainerEl, ['button-wide']);
+    const deleteTaskButtonEl = drawDomElement('button', detailsHeaderContainerEl, ['wide', 'colored']);
     deleteTaskButtonEl.addEventListener('click', () => {
       if(confirm(`Delete ${task.name}?`)) {
         PubSub.publish('DELETE_TASK', [listIndex, taskIndex]);
