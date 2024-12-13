@@ -158,6 +158,11 @@ button.due-date img {
   bottom: 2px;
 }
 
+.icon-due {
+  position: relative;
+  bottom: 1px;
+}
+
 input {
   border: var(--color-gray-medium) solid 1px;
   border-radius: var(--border-radius-small);

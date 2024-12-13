@@ -193,7 +193,7 @@ const displayController = (function () {
     taskDueEl.appendChild(taskDuePickerEl);
 
     const taskDueButtonEl = drawDomElement('button', taskDueEl, ['due-date']);
-    drawImgElement(dueIcon, taskDueButtonEl);
+    drawImgElement(dueIcon, taskDueButtonEl, ['icon-due']);
     drawDomElement('span', taskDueButtonEl, [], formatDueDate(task.dueDate));
 
     taskDueButtonEl.addEventListener('click', (evt) => {
