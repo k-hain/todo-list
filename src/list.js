@@ -140,6 +140,13 @@ export const listController = (function () {
   const requestChangeTaskDateToken =
     PubSub.subscribe('CHANGE_TASK_DATE', requestChangeTaskDate);
 
+  const requestChangeTaskPriority = (msg, [listIndex, taskIndex, newPriority]) => {
+    lists[listIndex].tasks[taskIndex].priority = newPriority;
+    saveAndPrintList(listIndex);
+  };
+  const requiestChangeTaskPriorityToken =
+    PubSub.subscribe('CHANGE_TASK_PRIORITY', requestChangeTaskPriority);
+
   const requestChangeTaskIsFinished = (msg, [listIndex, taskIndex]) => {
     if (!lists[listIndex].tasks[taskIndex].isFinished) {
       lists[listIndex].tasks[taskIndex].isFinished = 1;

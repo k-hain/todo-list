@@ -22,6 +22,7 @@ import taskIconEmpty from './svg/circle_16dp_000000_FILL0_wght400_GRAD0_opsz20.s
 import taskIconChecked from './svg/task_alt_16dp_000000_FILL0_wght400_GRAD0_opsz20.svg';
 import dueIcon from './svg/calendar_month_16dp_000000_FILL0_wght400_GRAD0_opsz20.svg';
 import deleteIcon from './svg/delete_forever_24dp_000000_FILL0_wght400_GRAD0_opsz24.svg';
+import priorityIcon from './svg/label_16dp_000000_FILL0_wght400_GRAD0_opsz20.svg';
 
 const displayController = (function () {
   const contentEl = document.getElementById('content');
@@ -263,6 +264,38 @@ const displayController = (function () {
     }
   };
 
+  window.addEventListener('click', (evt) => {
+    if (!evt.target.matches('.dropdown-entry')) {
+      Array.from(
+        document.querySelectorAll('.dropdown-content')
+      ).forEach(
+        (el) => el.classList.remove('open')
+      );
+    }
+  });
+
+  const drawPriorityDropdown = (container, task, taskIndex, listIndex) => {
+    const dropdownEl = drawDomElement('div', container, ['dropdown']);
+    const dropdownButtonEl = drawDomElement('button', dropdownEl, ['dropdown-button']);
+    drawImgElement(priorityIcon, dropdownButtonEl, [`priority-${task.priority}`, 'icon-priority']);
+    drawDomElement('span', dropdownButtonEl, [], getPriorityName(task.priority))
+    const dropdownContentEl = drawDomElement('div', dropdownEl, ['dropdown-content']);
+    for (let i = 0; i < 3; i++) {
+      const dropdownEntryEl = drawDomElement('button', dropdownContentEl, ['dropdown-entry']);
+      drawImgElement(priorityIcon, dropdownEntryEl, [`priority-${i}`, 'icon-priority']);
+      drawDomElement('span', dropdownEntryEl, [], getPriorityName(i));
+      dropdownEntryEl.addEventListener('click', () => {
+        PubSub.publish('CHANGE_TASK_PRIORITY', [listIndex, taskIndex, i])
+      });
+    }
+    dropdownButtonEl.addEventListener('click', (evt) => {
+      if (!dropdownContentEl.matches('.open')) {
+        evt.stopPropagation();
+        dropdownContentEl.classList.add('open');
+      }
+    });
+  };
+
   const drawTaskDetails = (msg, [task, taskIndex, listIndex]) => {
     clearContents(detailsEl);
     const detailsContainerEl = drawDomElement('div', detailsEl, ['details-container']);
@@ -277,7 +310,7 @@ const displayController = (function () {
     drawImgElement(deleteIcon, deleteTaskButtonEl);
     drawDomElement('span', deleteTaskButtonEl, [], 'Delete task');
     drawTaskDate(detailsContainerEl, task, taskIndex, listIndex);
-    drawDomElement('div', detailsContainerEl, [], getPriorityName(task.priority));
+    drawPriorityDropdown(detailsContainerEl, task, taskIndex, listIndex)
     drawDomElement('div', detailsContainerEl, [], task.description);
   };
   const drawTaskDetailsToken =

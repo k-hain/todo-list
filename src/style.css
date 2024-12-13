@@ -153,6 +153,11 @@ button.due-date img {
   filter: var(--filter-black-to-gray-dark);
 }
 
+.icon-priority {
+  position: relative;
+  bottom: 2px;
+}
+
 input {
   border: var(--color-gray-medium) solid 1px;
   border-radius: var(--border-radius-small);
@@ -162,6 +167,48 @@ input {
 input:focus {
   outline: var(--color-main) solid 2px;
   border-color: white;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown-button {
+  display: flex;
+  align-items: center;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  z-index: 1;
+  background-color: var(--color-white);
+  border: 1px var(--color-gray-light) solid;
+  box-shadow: var(--shadow-card);
+  border-radius: var(--border-radius);
+}
+
+.dropdown-content.open {
+  display: flex;
+  flex-direction: column;
+}
+
+.dropdown-entry {
+  padding: var(--padding-tiny) var(--padding-small);
+  display: flex;
+  align-items: center;
+}
+
+.dropdown-entry:first-child {
+  border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+
+.dropdown-entry:last-child {
+  border-radius: 0 0 var(--border-radius) var(--border-radius);
+}
+
+.dropdown-entry:hover {
+  background-color: var(--color-main-light);
 }
 
 #content {
@@ -202,6 +249,9 @@ input:focus {
   box-shadow: var(--shadow-card);
   border-radius: var(--border-radius);
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--padding-small);
 }
 
 .details-header-container {
@@ -305,10 +355,6 @@ form.add-task input {
 
 .task-finished .task-icon {
   filter: var(--filter-black-to-gray-medium);
-}
-
-.task-selected {
-  background-color: red;
 }
 
 .task-header {
