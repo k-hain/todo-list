@@ -17,12 +17,18 @@ import {
 } from 'date-fns';
 import Sortable from 'sortablejs';
 
-import addIcon from './svg/add_24dp_000000_FILL0_wght400_GRAD0_opsz24.svg';
-import taskIconEmpty from './svg/circle_16dp_000000_FILL0_wght400_GRAD0_opsz20.svg';
-import taskIconChecked from './svg/task_alt_16dp_000000_FILL0_wght400_GRAD0_opsz20.svg';
-import dueIcon from './svg/calendar_month_16dp_000000_FILL0_wght400_GRAD0_opsz20.svg';
-import deleteIcon from './svg/delete_forever_24dp_000000_FILL0_wght400_GRAD0_opsz24.svg';
-import priorityIcon from './svg/label_16dp_000000_FILL0_wght400_GRAD0_opsz20.svg';
+import addIcon from
+  './svg/add_24dp_000000_FILL0_wght400_GRAD0_opsz24.svg';
+import taskIconEmpty from
+  './svg/circle_16dp_000000_FILL0_wght400_GRAD0_opsz20.svg';
+import taskIconChecked from
+  './svg/task_alt_16dp_000000_FILL0_wght400_GRAD0_opsz20.svg';
+import dueIcon from
+  './svg/calendar_month_16dp_000000_FILL0_wght400_GRAD0_opsz20.svg';
+import deleteIcon from
+  './svg/delete_forever_24dp_000000_FILL0_wght400_GRAD0_opsz24.svg';
+import priorityIcon from
+  './svg/label_16dp_000000_FILL0_wght400_GRAD0_opsz20.svg';
 
 const displayController = (function () {
   const contentEl = document.getElementById('content');
@@ -93,13 +99,17 @@ const displayController = (function () {
   const drawListToken = PubSub.subscribe('DRAW_LIST_PAGE', drawListPage);
 
   const drawTaskContainer = (tasksArr, container, listIndex) => {
-    const taskContainerEl = drawDomElement('div', container, ['task-container']);
+    const taskContainerEl =
+      drawDomElement('div', container, ['task-container']);
     if (tasksArr.length) {
       tasksArr.forEach((task) => {
         drawTask(task, taskContainerEl, tasksArr.indexOf(task), listIndex);
       });
       Sortable.create(taskContainerEl, taskContainerOptions);
-      PubSub.publish('DRAW_TASK_DETAILS', [tasksArr[displayedTaskIndex], displayedTaskIndex, listIndex])
+      PubSub.publish(
+        'DRAW_TASK_DETAILS',
+        [tasksArr[displayedTaskIndex], displayedTaskIndex, listIndex]
+      );
     }
   };
 
@@ -203,7 +213,8 @@ const displayController = (function () {
 
     taskDuePickerEl.addEventListener('input', (evt) => {
       if (!taskDuePickerEl.value) {
-        taskDuePickerEl.value = formatISO(new Date(), { representation: 'date' });
+        taskDuePickerEl.value =
+          formatISO(new Date(), { representation: 'date' });
       }
       PubSub.publish('CHANGE_TASK_DATE', [
         listIndex, taskIndex, taskDuePickerEl.value
@@ -229,7 +240,8 @@ const displayController = (function () {
     addTaskInputEl.placeholder = 'Add new task';
     addTaskFormEl.appendChild(addTaskInputEl);
 
-    const addTaskBtnEl = drawDomElement('button', addTaskFormEl, ['round', 'colored']);
+    const addTaskBtnEl =
+      drawDomElement('button', addTaskFormEl, ['round', 'colored']);
     drawImgElement(addIcon, addTaskBtnEl);
   
     addTaskFormEl.addEventListener('submit', (event) => {
@@ -276,16 +288,27 @@ const displayController = (function () {
 
   const drawPriorityDropdown = (container, task, taskIndex, listIndex) => {
     const dropdownEl = drawDomElement('div', container, ['dropdown']);
-    const dropdownButtonEl = drawDomElement('button', dropdownEl, ['dropdown-button']);
-    drawImgElement(priorityIcon, dropdownButtonEl, [`priority-${task.priority}`, 'icon-priority']);
-    drawDomElement('span', dropdownButtonEl, [], getPriorityName(task.priority))
-    const dropdownContentEl = drawDomElement('div', dropdownEl, ['dropdown-content']);
+    const dropdownButtonEl =
+      drawDomElement('button', dropdownEl, ['dropdown-button']);
+    drawImgElement(
+      priorityIcon,
+      dropdownButtonEl,
+      [`priority-${task.priority}`, 'icon-priority']
+    );
+    drawDomElement(
+      'span', dropdownButtonEl, [], getPriorityName(task.priority)
+    );
+    const dropdownContentEl =
+      drawDomElement('div', dropdownEl, ['dropdown-content']);
     for (let i = 0; i < 3; i++) {
-      const dropdownEntryEl = drawDomElement('button', dropdownContentEl, ['dropdown-entry']);
-      drawImgElement(priorityIcon, dropdownEntryEl, [`priority-${i}`, 'icon-priority']);
+      const dropdownEntryEl =
+        drawDomElement('button', dropdownContentEl, ['dropdown-entry']);
+      drawImgElement(
+        priorityIcon, dropdownEntryEl, [`priority-${i}`, 'icon-priority']
+      );
       drawDomElement('span', dropdownEntryEl, [], getPriorityName(i));
       dropdownEntryEl.addEventListener('click', () => {
-        PubSub.publish('CHANGE_TASK_PRIORITY', [listIndex, taskIndex, i])
+        PubSub.publish('CHANGE_TASK_PRIORITY', [listIndex, taskIndex, i]);
       });
     }
     dropdownButtonEl.addEventListener('click', (evt) => {
@@ -298,10 +321,13 @@ const displayController = (function () {
 
   const drawTaskDetails = (msg, [task, taskIndex, listIndex]) => {
     clearContents(detailsEl);
-    const detailsContainerEl = drawDomElement('div', detailsEl, ['details-container']);
-    const detailsHeaderContainerEl = drawDomElement('div', detailsContainerEl, ['details-header-container']);
+    const detailsContainerEl =
+      drawDomElement('div', detailsEl, ['details-container']);
+    const detailsHeaderContainerEl =
+      drawDomElement('div', detailsContainerEl, ['details-header-container']);
     drawDomElement('h1', detailsHeaderContainerEl, [], task.name);
-    const deleteTaskButtonEl = drawDomElement('button', detailsHeaderContainerEl, ['wide', 'colored']);
+    const deleteTaskButtonEl =
+      drawDomElement('button', detailsHeaderContainerEl, ['wide', 'colored']);
     deleteTaskButtonEl.addEventListener('click', () => {
       if(confirm(`Delete ${task.name}?`)) {
         PubSub.publish('DELETE_TASK', [listIndex, taskIndex]);
@@ -310,8 +336,17 @@ const displayController = (function () {
     drawImgElement(deleteIcon, deleteTaskButtonEl);
     drawDomElement('span', deleteTaskButtonEl, [], 'Delete task');
     drawTaskDate(detailsContainerEl, task, taskIndex, listIndex);
-    drawPriorityDropdown(detailsContainerEl, task, taskIndex, listIndex)
-    drawDomElement('div', detailsContainerEl, [], task.description);
+    drawPriorityDropdown(detailsContainerEl, task, taskIndex, listIndex);
+    drawDomElement('h3', detailsContainerEl, [], 'Notes')
+    const taskDescriptionEl = drawDomElement(
+      'textarea', detailsContainerEl, [], task.description
+    );
+    taskDescriptionEl.placeholder = 'Insert your notes here';
+    taskDescriptionEl.addEventListener('change', (evt) => {
+      PubSub.publish(
+        'CHANGE_TASK_DESCRIPTION', [listIndex, taskIndex, evt.target.value]
+      );
+    })
   };
   const drawTaskDetailsToken =
     PubSub.subscribe('DRAW_TASK_DETAILS', drawTaskDetails);

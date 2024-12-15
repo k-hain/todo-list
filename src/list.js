@@ -52,7 +52,13 @@ export const listController = (function () {
       storedData.forEach((elList) => {
         const newList = new List(elList.name);
         elList.tasks.forEach((elTask) => {
-          newList.addTask(elTask.name, elTask.priority, elTask.dueDate, elTask.description, elTask.isFinished);
+          newList.addTask(
+            elTask.name,
+            elTask.priority,
+            elTask.dueDate,
+            elTask.description,
+            elTask.isFinished
+          );
         });
         lists.push(newList);
       });
@@ -90,7 +96,8 @@ export const listController = (function () {
     PubSub.subscribe('SEND_LIST_TO_DRAW', sendListToDraw);
   
   const requestAddTask = (msg, [taskName, listIndex]) => {
-    lists[listIndex].addTask(taskName, 1, addDays(zeroedDate(new Date()), 1), 'No description', 0);
+    lists[listIndex]
+    .addTask(taskName, 1, addDays(zeroedDate(new Date()), 1), '', 0);
     saveAndPrintList(listIndex);
   };
   const requestAddTaskToken = PubSub.subscribe('NEW_TASK', requestAddTask);
@@ -99,7 +106,8 @@ export const listController = (function () {
     lists[listIndex].deleteTask(taskIndex);
     saveAndPrintList(listIndex);
   };
-  const requestDeleteTaskToken = PubSub.subscribe('DELETE_TASK', requestDeleteTask);
+  const requestDeleteTaskToken =
+    PubSub.subscribe('DELETE_TASK', requestDeleteTask);
 
   const sendTaskToDraw = (msg, [listIndex, taskIndex]) => {
     PubSub.publish('DRAW_TASK_DETAILS', [
@@ -140,12 +148,23 @@ export const listController = (function () {
   const requestChangeTaskDateToken =
     PubSub.subscribe('CHANGE_TASK_DATE', requestChangeTaskDate);
 
-  const requestChangeTaskPriority = (msg, [listIndex, taskIndex, newPriority]) => {
+  const requestChangeTaskPriority = (
+    msg, [listIndex, taskIndex, newPriority]
+  ) => {
     lists[listIndex].tasks[taskIndex].priority = newPriority;
     saveAndPrintList(listIndex);
   };
   const requiestChangeTaskPriorityToken =
     PubSub.subscribe('CHANGE_TASK_PRIORITY', requestChangeTaskPriority);
+
+  const requestChangeTaskDescription = (
+    msg, [listIndex, taskIndex, newDescription]
+  ) => {
+    lists[listIndex].tasks[taskIndex].description = newDescription;
+    saveAndPrintList(listIndex);
+  };
+  const requestChangeTaskDescriptionToken =
+    PubSub.subscribe('CHANGE_TASK_DESCRIPTION', requestChangeTaskDescription);
 
   const requestChangeTaskIsFinished = (msg, [listIndex, taskIndex]) => {
     if (!lists[listIndex].tasks[taskIndex].isFinished) {

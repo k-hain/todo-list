@@ -163,6 +163,19 @@ button.due-date img {
   bottom: 1px;
 }
 
+textarea {
+  resize: none;
+  border: solid 1px var(--color-gray-light);
+  outline: none;
+  padding: var(--padding-small);
+  border-radius: var(--border-radius);
+  flex-grow: 1;
+}
+
+textarea:focus {
+  border: solid 1px var(--color-gray-medium)
+}
+
 input {
   border: var(--color-gray-medium) solid 1px;
   border-radius: var(--border-radius-small);
