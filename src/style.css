@@ -176,6 +176,18 @@ textarea:focus {
   border: solid 1px var(--color-gray-medium)
 }
 
+textarea.task-name {
+  padding: 0;
+  border: none;
+  font-size: 2rem;
+  font-weight: bold;
+  height: 48px;
+}
+
+textarea.task-name:focus {
+  border: none;
+}
+
 input {
   border: var(--color-gray-medium) solid 1px;
   border-radius: var(--border-radius-small);

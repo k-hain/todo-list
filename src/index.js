@@ -325,7 +325,29 @@ const displayController = (function () {
       drawDomElement('div', detailsEl, ['details-container']);
     const detailsHeaderContainerEl =
       drawDomElement('div', detailsContainerEl, ['details-header-container']);
-    drawDomElement('h1', detailsHeaderContainerEl, [], task.name);
+    const taskNameEl =
+      drawDomElement('textarea', detailsHeaderContainerEl, ['task-name'], task.name);
+    taskNameEl.maxLength = 15;
+    taskNameEl.addEventListener('keydown', (evt) => {
+      if (evt.key === 'Enter') {
+        evt.preventDefault();
+        if (taskNameEl === document.activeElement) {
+          taskNameEl.blur();
+        }
+      }
+    });
+    taskNameEl.addEventListener('blur', (evt) => {
+      if (evt.target.value.length) {
+        PubSub.publish(
+          'CHANGE_TASK_NAME', [listIndex, taskIndex, evt.target.value]
+        );
+      } else if (!evt.target.value.length) {
+        alert("Name can't be empty!");
+        setTimeout(() => {
+          taskNameEl.focus();
+        }, 1);
+      }
+    });
     const deleteTaskButtonEl =
       drawDomElement('button', detailsHeaderContainerEl, ['wide', 'colored']);
     deleteTaskButtonEl.addEventListener('click', () => {

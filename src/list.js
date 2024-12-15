@@ -157,6 +157,15 @@ export const listController = (function () {
   const requiestChangeTaskPriorityToken =
     PubSub.subscribe('CHANGE_TASK_PRIORITY', requestChangeTaskPriority);
 
+  const requestChangeTaskName = (
+    msg, [listIndex, taskIndex, newName]
+  ) => {
+    lists[listIndex].tasks[taskIndex].name = newName;
+    saveAndPrintList(listIndex);
+  };
+  const requestChangeTaskNameToken =
+    PubSub.subscribe('CHANGE_TASK_NAME', requestChangeTaskName);
+
   const requestChangeTaskDescription = (
     msg, [listIndex, taskIndex, newDescription]
   ) => {
