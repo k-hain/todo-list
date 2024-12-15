@@ -111,15 +111,15 @@ const displayController = (function () {
         if (evt.oldIndex === displayedTaskIndex) {
           displayedTaskIndex = evt.newIndex;
         } else if (
-          evt.oldIndex > displayedTaskIndex &&
-          evt.newIndex < displayedTaskIndex
-        ) {
-          displayedTaskIndex -= 1;
-        } else if (
-          evt.oldIndex < displayedTaskIndex &&
-          evt.newIndex > displayedTaskIndex
+          evt.newIndex <= displayedTaskIndex &&
+          evt.oldIndex > displayedTaskIndex
         ) {
           displayedTaskIndex += 1;
+        } else if (
+          evt.newIndex >= displayedTaskIndex &&
+          evt.oldIndex < displayedTaskIndex
+        ) {
+          displayedTaskIndex -= 1;
         }
         PubSub.publish(
           'DRAG_TASK',
