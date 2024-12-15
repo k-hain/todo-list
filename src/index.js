@@ -26,9 +26,13 @@ import taskIconChecked from
 import dueIcon from
   './svg/calendar_month_16dp_000000_FILL0_wght400_GRAD0_opsz20.svg';
 import deleteIcon from
-  './svg/delete_forever_24dp_000000_FILL0_wght400_GRAD0_opsz24.svg';
+  './svg/delete_forever_16dp_000000_FILL0_wght400_GRAD0_opsz20.svg';
 import priorityIcon from
   './svg/label_16dp_000000_FILL0_wght400_GRAD0_opsz20.svg';
+import doneIcon from
+  './svg/done_all_16dp_000000_FILL0_wght400_GRAD0_opsz20.svg';
+import removeDoneIcon from
+  './svg/remove_done_16dp_000000_FILL0_wght400_GRAD0_opsz20.svg'
 
 const displayController = (function () {
   const contentEl = document.getElementById('content');
@@ -323,6 +327,35 @@ const displayController = (function () {
     clearContents(detailsEl);
     const detailsContainerEl =
       drawDomElement('div', detailsEl, ['details-container']);
+
+    const taskButtonContainerEl =
+      drawDomElement('div', detailsContainerEl, ['task-button-container']);
+    const markTaskButtonEl =
+      drawDomElement('button', taskButtonContainerEl, ['wide', 'colored']);
+    if (task.isFinished) {
+      drawImgElement(removeDoneIcon, markTaskButtonEl);
+      drawDomElement('span', markTaskButtonEl, [], 'Mark in progress');
+    } else {
+      drawImgElement(doneIcon, markTaskButtonEl);
+      drawDomElement('span', markTaskButtonEl, [], 'Mark complete');
+    }
+    markTaskButtonEl.addEventListener('click', () => {
+      PubSub.publish('CHANGE_TASK_ISFINISHED', [listIndex, taskIndex]);
+    });
+    const deleteTaskButtonEl =
+      drawDomElement('button', taskButtonContainerEl, ['wide', 'colored']);
+
+    drawImgElement(deleteIcon, deleteTaskButtonEl);
+    drawDomElement('span', deleteTaskButtonEl, [], 'Delete task');  
+    deleteTaskButtonEl.addEventListener('click', () => {
+      if(confirm(`Delete ${task.name}?`)) {
+        if (taskIndex === displayedTaskIndex) {
+          displayedTaskIndex -= 1;
+        }
+        PubSub.publish('DELETE_TASK', [listIndex, taskIndex]);
+      }
+    });
+    
     const detailsHeaderContainerEl =
       drawDomElement('div', detailsContainerEl, ['details-header-container']);
     const taskNameEl =
@@ -348,18 +381,7 @@ const displayController = (function () {
         }, 1);
       }
     });
-    const deleteTaskButtonEl =
-      drawDomElement('button', detailsHeaderContainerEl, ['wide', 'colored']);
-    deleteTaskButtonEl.addEventListener('click', () => {
-      if(confirm(`Delete ${task.name}?`)) {
-        if (taskIndex === displayedTaskIndex) {
-          displayedTaskIndex -= 1;
-        }
-        PubSub.publish('DELETE_TASK', [listIndex, taskIndex]);
-      }
-    });
-    drawImgElement(deleteIcon, deleteTaskButtonEl);
-    drawDomElement('span', deleteTaskButtonEl, [], 'Delete task');
+
     drawTaskDate(detailsContainerEl, task, taskIndex, listIndex);
     drawPriorityDropdown(detailsContainerEl, task, taskIndex, listIndex);
     drawDomElement('h3', detailsContainerEl, [], 'Notes')
