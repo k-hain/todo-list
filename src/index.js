@@ -330,6 +330,9 @@ const displayController = (function () {
       drawDomElement('button', detailsHeaderContainerEl, ['wide', 'colored']);
     deleteTaskButtonEl.addEventListener('click', () => {
       if(confirm(`Delete ${task.name}?`)) {
+        if (taskIndex === displayedTaskIndex) {
+          displayedTaskIndex -= 1;
+        }
         PubSub.publish('DELETE_TASK', [listIndex, taskIndex]);
       }
     });
