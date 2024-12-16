@@ -141,6 +141,16 @@ export const listController = (function () {
   const requestDragTaskToken =
     PubSub.subscribe('DRAG_TASK', requestDragTask);
 
+  const requestChangeListName = (
+    msg, [listIndex, newName]
+  ) => {
+    lists[listIndex].name = newName;
+    updateListNames();
+    saveAndPrintList(listIndex);
+  };
+  const requestChangeListNameToken =
+    PubSub.subscribe('CHANGE_LIST_NAME', requestChangeListName);
+
   const requestChangeTaskDate = (msg, [listIndex, taskIndex, inputDate]) => {
     lists[listIndex].tasks[taskIndex].dueDate = zeroedDate(new Date(inputDate));
     saveAndPrintList(listIndex);

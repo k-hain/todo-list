@@ -40,7 +40,7 @@ const displayController = (function () {
   const detailsEl = document.getElementById('details');
   const listsEl = document.createElement('div');
 
-  let displayedListIndex;
+  let displayedListIndex = 0;
   let displayedTaskIndex = 0;
 
   const initializePage = (msg) => {
@@ -83,7 +83,7 @@ const displayController = (function () {
     clearContents(listsEl);
     listNames.forEach((listName) => {
       const listNameEl = drawDomElement('button', listsEl, [], listName);
-      if (listNames.indexOf(listName) === 0) {
+      if (listNames.indexOf(listName) === displayedListIndex) {
         listNameEl.classList.add('selected');
       }
       listNameEl.addEventListener('click', () => {
@@ -97,12 +97,22 @@ const displayController = (function () {
   const drawSidebarButtonsToken =
     PubSub.subscribe('UPDATE_LIST_NAMES', drawSidebarButtons);
 
+  const pubChangeListName = (listIndex, newName) => {
+    PubSub.publish(
+      'CHANGE_LIST_NAME', [listIndex, newName]
+    );
+  };
+
   const drawListPage = (msg, [listName, tasksArr, listIndex]) => {
     displayedListIndex = listIndex;
     clearContents(contentEl);
     clearContents(detailsEl);
-    //
-    drawDomElement('h1', contentEl, ['page-header'], listName);
+    const listHeaderEl =
+      drawDomElement('textarea', contentEl, ['editable-header'], listName);
+    preventNewLineOnEnter(listHeaderEl);
+    addHeaderBlurEvent(
+      listHeaderEl, pubChangeListName, listIndex
+    );
     drawTaskContainer(tasksArr, contentEl, listIndex);
     drawNewTaskForm(listIndex, contentEl);
   };
@@ -372,7 +382,7 @@ const displayController = (function () {
     const detailsHeaderContainerEl =
       drawDomElement('div', detailsContainerEl, ['details-header-container']);
     const taskNameEl =
-      drawDomElement('textarea', detailsHeaderContainerEl, ['task-name'], task.name);
+      drawDomElement('textarea', detailsHeaderContainerEl, ['editable-header'], task.name);
     taskNameEl.maxLength = 15;
     preventNewLineOnEnter(taskNameEl);
     addHeaderBlurEvent(

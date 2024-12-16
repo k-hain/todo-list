@@ -186,7 +186,11 @@ textarea:focus {
   border: solid 1px var(--color-gray-medium)
 }
 
-textarea.task-name {
+#content .editable-header {
+  margin-bottom: var(--padding-large);
+}
+
+.editable-header {
   padding: 0;
   border: none;
   font-size: 2rem;
@@ -194,7 +198,7 @@ textarea.task-name {
   height: 48px;
 }
 
-textarea.task-name:focus {
+.editable-header:focus {
   border: none;
 }
 
@@ -274,8 +278,6 @@ input:focus {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  /*padding: var(--padding-base);
-  gap: var(--padding-base);*/
   position: fixed;
   top: 0px;
   left: 0px;
@@ -304,10 +306,6 @@ input:focus {
   display: flex;
   gap: var(--padding-small);
   justify-content: flex-end;
-}
-
-.page-header {
-  margin-bottom: var(--padding-large);
 }
 
 .lists {
