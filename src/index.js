@@ -349,11 +349,11 @@ const displayController = (function () {
     const markTaskButtonEl =
       drawDomElement('button', taskButtonContainerEl, ['wide', 'colored']);
     if (task.isFinished) {
-      drawImgElement(taskIconChecked, markTaskButtonEl);
+      drawImgElement(taskIconChecked, markTaskButtonEl, ['icon-checked']);
       drawDomElement('span', markTaskButtonEl, [], 'Completed');
       markTaskButtonEl.classList.add('completed');
     } else {
-      drawImgElement(doneIcon, markTaskButtonEl);
+      drawImgElement(doneIcon, markTaskButtonEl, ['icon-done']);
       drawDomElement('span', markTaskButtonEl, [], 'Mark as complete');
     }
     markTaskButtonEl.addEventListener('click', () => {
@@ -362,7 +362,7 @@ const displayController = (function () {
     const deleteTaskButtonEl =
       drawDomElement('button', taskButtonContainerEl, ['wide', 'colored']);
 
-    drawImgElement(deleteIcon, deleteTaskButtonEl);
+    drawImgElement(deleteIcon, deleteTaskButtonEl, ['icon-delete']);
     drawDomElement('span', deleteTaskButtonEl, [], 'Delete task');  
     deleteTaskButtonEl.addEventListener('click', () => {
       if(confirm(`Delete ${task.name}?`)) {

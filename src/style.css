@@ -168,7 +168,7 @@ button.completed img {
   bottom: 2px;
 }
 
-.icon-due {
+.icon-due, .icon-checked, .icon-done, .icon-delete {
   position: relative;
   bottom: 1px;
 }
