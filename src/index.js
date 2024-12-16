@@ -5,7 +5,9 @@ import { storageController } from './storage';
 import {
   drawDomElement,
   drawImgElement,
-  clearContents
+  clearContents,
+  preventNewLineOnEnter,
+  addHeaderBlurEvent
 } from './dom-edit';
 import {
   isToday,
@@ -99,6 +101,7 @@ const displayController = (function () {
     displayedListIndex = listIndex;
     clearContents(contentEl);
     clearContents(detailsEl);
+    //
     drawDomElement('h1', contentEl, ['page-header'], listName);
     drawTaskContainer(tasksArr, contentEl, listIndex);
     drawNewTaskForm(listIndex, contentEl);
@@ -360,31 +363,21 @@ const displayController = (function () {
       }
     });
     
+    const pubChangeTaskName = (listIndex, taskIndex, newName) => {
+      PubSub.publish(
+        'CHANGE_TASK_NAME', [listIndex, taskIndex, newName]
+      );
+    };
+
     const detailsHeaderContainerEl =
       drawDomElement('div', detailsContainerEl, ['details-header-container']);
     const taskNameEl =
       drawDomElement('textarea', detailsHeaderContainerEl, ['task-name'], task.name);
     taskNameEl.maxLength = 15;
-    taskNameEl.addEventListener('keydown', (evt) => {
-      if (evt.key === 'Enter') {
-        evt.preventDefault();
-        if (taskNameEl === document.activeElement) {
-          taskNameEl.blur();
-        }
-      }
-    });
-    taskNameEl.addEventListener('blur', (evt) => {
-      if (evt.target.value.length) {
-        PubSub.publish(
-          'CHANGE_TASK_NAME', [listIndex, taskIndex, evt.target.value]
-        );
-      } else if (!evt.target.value.length) {
-        alert("Name can't be empty!");
-        setTimeout(() => {
-          taskNameEl.focus();
-        }, 1);
-      }
-    });
+    preventNewLineOnEnter(taskNameEl);
+    addHeaderBlurEvent(
+      taskNameEl, listIndex, taskIndex, pubChangeTaskName
+    );
 
     drawTaskDate(detailsContainerEl, task, taskIndex, listIndex);
     drawPriorityDropdown(detailsContainerEl, task, taskIndex, listIndex);

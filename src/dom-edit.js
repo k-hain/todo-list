@@ -31,3 +31,27 @@ export const clearContents = (domEl) => {
     domEl.removeChild(domEl.firstChild);
   }
 };
+
+export const preventNewLineOnEnter = (el) => {
+  el.addEventListener('keydown', (evt) => {
+    if (evt.key === 'Enter') {
+      evt.preventDefault();
+      if (el === document.activeElement) {
+        el.blur();
+      }
+    }
+  });
+};
+
+export const addHeaderBlurEvent = (el, listIndex, taskIndex, publishFunc) => {
+  el.addEventListener('blur', (evt) => {
+    if (evt.target.value.length) {
+      publishFunc(listIndex, taskIndex, evt.target.value);
+    } else if (!evt.target.value.length) {
+      alert("Name can't be empty!");
+      setTimeout(() => {
+        el.focus();
+      }, 1);
+    }
+  });
+};
