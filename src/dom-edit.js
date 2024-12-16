@@ -43,10 +43,14 @@ export const preventNewLineOnEnter = (el) => {
   });
 };
 
-export const addHeaderBlurEvent = (el, listIndex, taskIndex, publishFunc) => {
+export const addHeaderBlurEvent = (el, publishFunc, listIndex, taskIndex) => {
   el.addEventListener('blur', (evt) => {
     if (evt.target.value.length) {
-      publishFunc(listIndex, taskIndex, evt.target.value);
+      if (taskIndex === undefined) {
+        publishFunc(listIndex, evt.target.value);
+      } else {
+        publishFunc(listIndex, taskIndex, evt.target.value);
+      }
     } else if (!evt.target.value.length) {
       alert("Name can't be empty!");
       setTimeout(() => {

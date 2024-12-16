@@ -376,7 +376,7 @@ const displayController = (function () {
     taskNameEl.maxLength = 15;
     preventNewLineOnEnter(taskNameEl);
     addHeaderBlurEvent(
-      taskNameEl, listIndex, taskIndex, pubChangeTaskName
+      taskNameEl, pubChangeTaskName, listIndex, taskIndex
     );
 
     drawTaskDate(detailsContainerEl, task, taskIndex, listIndex);
