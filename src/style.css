@@ -154,6 +154,15 @@ button.due-date img {
   filter: var(--filter-black-to-gray-dark);
 }
 
+button.completed {
+  color: var(--color-main);
+  font-weight: bold;
+}
+
+button.completed img {
+  filter: var(--filter-black-to-priority-2);
+}
+
 .icon-priority {
   position: relative;
   bottom: 2px;

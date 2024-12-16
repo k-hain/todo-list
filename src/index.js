@@ -31,8 +31,6 @@ import priorityIcon from
   './svg/label_16dp_000000_FILL0_wght400_GRAD0_opsz20.svg';
 import doneIcon from
   './svg/done_all_16dp_000000_FILL0_wght400_GRAD0_opsz20.svg';
-import removeDoneIcon from
-  './svg/remove_done_16dp_000000_FILL0_wght400_GRAD0_opsz20.svg'
 
 const displayController = (function () {
   const contentEl = document.getElementById('content');
@@ -333,11 +331,12 @@ const displayController = (function () {
     const markTaskButtonEl =
       drawDomElement('button', taskButtonContainerEl, ['wide', 'colored']);
     if (task.isFinished) {
-      drawImgElement(removeDoneIcon, markTaskButtonEl);
-      drawDomElement('span', markTaskButtonEl, [], 'Mark in progress');
+      drawImgElement(taskIconChecked, markTaskButtonEl);
+      drawDomElement('span', markTaskButtonEl, [], 'Completed');
+      markTaskButtonEl.classList.add('completed');
     } else {
       drawImgElement(doneIcon, markTaskButtonEl);
-      drawDomElement('span', markTaskButtonEl, [], 'Mark complete');
+      drawDomElement('span', markTaskButtonEl, [], 'Mark as complete');
     }
     markTaskButtonEl.addEventListener('click', () => {
       PubSub.publish('CHANGE_TASK_ISFINISHED', [listIndex, taskIndex]);
