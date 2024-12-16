@@ -81,8 +81,13 @@ const displayController = (function () {
     clearContents(listsEl);
     listNames.forEach((listName) => {
       const listNameEl = drawDomElement('button', listsEl, [], listName);
+      if (listNames.indexOf(listName) === 0) {
+        listNameEl.classList.add('selected');
+      }
       listNameEl.addEventListener('click', () => {
         displayedTaskIndex = 0;
+        listsEl.querySelector('.selected').classList.remove('selected');
+        listNameEl.classList.add('selected');
         PubSub.publish('SEND_LIST_TO_DRAW', listNames.indexOf(listName));
       });
     });

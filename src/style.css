@@ -274,8 +274,8 @@ input:focus {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  padding: var(--padding-base);
-  gap: var(--padding-base);
+  /*padding: var(--padding-base);
+  gap: var(--padding-base);*/
   position: fixed;
   top: 0px;
   left: 0px;
@@ -320,7 +320,23 @@ input:focus {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: var(--padding-base);
 }
+
+.lists button {
+  padding: var(--padding-tiny) var(--padding-base);
+}
+
+.lists button.selected {
+  background-color: var(--color-main-light);
+}
+
+.lists button:hover {
+  background: none;
+  background-color: var(--color-main);
+  color: var(--color-white);
+}
+
 
 form.add-task {
   display: flex;
