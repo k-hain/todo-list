@@ -8,7 +8,7 @@
     "build": "webpack --config webpack.prod.js",
     "deploy": "npm run sync-changes && npm run build && npm run deployment-commit && npm run push-dist && npm run checkout-main",
     "sync-changes": "git checkout gh-pages && git merge main --no-edit",
-    "deployment-commit": "git add dist -f && git commit -m 'Deployment commit'",
+    "deployment-commit": "git add dist -f && git commit -m 'Deployment'",
     "push-dist": "git subtree push --prefix dist origin gh-pages",
     "checkout-main": "git checkout main"
   },
