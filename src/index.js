@@ -366,7 +366,7 @@ const displayController = (function () {
     drawDomElement('span', deleteTaskButtonEl, [], 'Delete task');  
     deleteTaskButtonEl.addEventListener('click', () => {
       if(confirm(`Delete ${task.name}?`)) {
-        if (taskIndex === displayedTaskIndex) {
+        if (taskIndex !== 0) {
           displayedTaskIndex -= 1;
         }
         PubSub.publish('DELETE_TASK', [listIndex, taskIndex]);
